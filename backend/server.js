@@ -18,17 +18,20 @@ app.use(cors({
 app.use(express.json());
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, 
+  pool: true, 
   auth: {
     user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASS,
   },
+  connectionTimeout: 10000,
 });
 
 // === Contact API Route ===
 app.post("/api/contact", async (req, res) => {
   const { from_name, from_email, message } = req.body;
-  console.log({ from_name, from_email, message });
 
   // basic validation
   if (!from_name || !from_email || !message) {
