@@ -1,0 +1,20 @@
+{
+  "name": "snackstack-backend",
+  "version": "1.0.0",
+  "description": "Backend for SnackStack contact system using Node.js, Express, and Nodemailer",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "nodemailer": "^7.0.10"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}

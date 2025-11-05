@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en" id="themeRoot" data-bs-theme="light">
+    
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SnackStack</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- ThemeToggle -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-toggles@4.10.1/css/classic.min.css">
+    <!-- CSS -->
+    <link href="style.css" rel="stylesheet">
+</head>
+  <body>
+    <!-- Navbar using the Bootstrap -->
+    
+    <!-- For Large Screen -->
+    <nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary d-none d-lg-flex">
+        <div class="container-fluid justify-content-between align-items-center">
+            <a class="navbar-brand flex-grow-0 me-4">🍔 SnackStack</a>
+            <form class="d-flex flex-grow-1 justify-content-center position-relative" role="search">
+                <input class="form-control w-50 me-2 searchInput" id="searchBoxDesktop" type="search" placeholder="Enter The Recipe Name" aria-label="Search"/>
+                <button class="btn btn-outline-success searchbtn" type="submit">
+                    <span class="button-text">Search</span>
+                    <span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                </button>
+
+                <div id="resultsBoxDesktop" class="results-box shadow border rounded list-group position-absolute translate-middle-x mt-5 w-100"
+                    style="z-index:1050; display:none; left: 63%;">
+                </div>
+            </form>
+
+            <!-- Theme toggle code -->
+            <label class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
+                <input type="checkbox" id="themeChecked">
+                <div class="toggle-switch">
+                    <div class="toggle-circle"></div>
+                    <div class="icon moon">🌙</div>
+                    <div class="icon sun">🌞</div>
+                </div>
+            </label>
+
+            <ul class="navbar-nav flex-grow-0 d-flex align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link randomRecipe" href="#" >Random</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Categories
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Beef</a></li>
+                        <li><a class="dropdown-item" href="#">Chicken</a></li>
+                        <li><a class="dropdown-item" href="#">Dessert</a></li>
+                        <li><a class="dropdown-item" href="#">Lamb</a></li>
+                        <li><a class="dropdown-item" href="#">Miscellaneous</a></li>
+                        <li><a class="dropdown-item" href="#">Pasta</a></li>
+                        <li><a class="dropdown-item" href="#">Pork</a></li>
+                        <li><a class="dropdown-item" href="#">Seafood</a></li>
+                        <li><a class="dropdown-item" href="#">Side</a></li>
+                        <li><a class="dropdown-item" href="#">Starter</a></li>
+                        <li><a class="dropdown-item" href="#">Vegan</a></li>
+                        <li><a class="dropdown-item" href="#">Vegetarian</a></li>
+                        <li><a class="dropdown-item" href="#">Breakfast</a></li>
+                        <li><a class="dropdown-item" href="#">Goat</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#about">About</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- For Small Screen -->
+    <nav class="navbar sticky-top bg-body-tertiary fixed-top d-lg-none">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">SnackStack</a>
+
+            <!-- Theme toggle code -->
+            <div class="d-flex justify-content-end">
+                <label class="theme-toggle m-2" id="themeToggleSmall" title="Toggle theme" aria-label="Toggle theme">
+                    <input type="checkbox" id="themeCheckedSmall">
+                    <div class="toggle-switch">
+                        <div class="toggle-circle"></div>
+                        <div class="icon moon">🌙</div>
+                        <div class="icon sun">🌞</div>
+                    </div>
+                </label>
+                <!-- Navbar Code -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">🍔 SnackStack</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                <div class="offcanvas-body">
+                    <form class="d-flex mt-3 position-relative" role="search">
+                        <input class="form-control me-2 searchInput" id="searchBoxMobile" type="search" placeholder="Search" aria-label="Search"/>
+                        <button class="btn btn-outline-success searchbtn" type="submit">
+                            <span class="button-text">Search</span>
+                            <span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                        </button>
+
+                        <!-- Mobile Search Results -->
+                        <div class="results-box shadow border rounded list-group position-absolute mt-1"
+                            id="resultsBoxMobile"
+                            style="z-index: 1055; display: none; width: 100%;">
+                        </div>
+                    </form>
+
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link randomRecipe" href="#">RandomRecipe</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#about">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Categories
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Beef</a></li>
+                                <li><a class="dropdown-item" href="#">Chicken</a></li>
+                                <li><a class="dropdown-item" href="#">Dessert</a></li>
+                                <li><a class="dropdown-item" href="#">Lamb</a></li>
+                                <li><a class="dropdown-item" href="#">Miscellaneous</a></li>
+                                <li><a class="dropdown-item" href="#">Pasta</a></li>
+                                <li><a class="dropdown-item" href="#">Pork</a></li>
+                                <li><a class="dropdown-item" href="#">Seafood</a></li>
+                                <li><a class="dropdown-item" href="#">Side</a></li>
+                                <li><a class="dropdown-item" href="#">Starter</a></li>
+                                <li><a class="dropdown-item" href="#">Vegan</a></li>
+                                <li><a class="dropdown-item" href="#">Vegetarian</a></li>
+                                <li><a class="dropdown-item" href="#">Breakfast</a></li>
+                                <li><a class="dropdown-item" href="#">Goat</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div> 
+        </div>
+    </nav>
+
+    <!-- Main Image -->
+    <picture>
+        <img src="Heroimg.png" class="img-fluid" alt="">
+    </picture>
+
+    <!-- Main Content -->
+     <main>
+        <div id="MainContent">
+            <!-- Dynamically append content by the javascript  -->
+            <div class="container-fluid">
+                <div class="row" id="cardAppend">
+                    <div class="col-12">
+                        <h1 class="mainHeading">RECIPES</h1>
+                    </div>  
+                </div>
+            </div>
+        </div>
+     </main>
+    <!-- Toast Component -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+        <div id="myToast" class="toast align-items-center text-white bg-dark fade custom-border" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toast-message">
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!--About Section-->
+    <section id="about" class="py-5 bg-body-tertiary">
+        <div class="container text-center">
+            <h2 class="mb-4 fw-bold">About SnackStack</h2>
+            <p class="lead text-muted mx-auto" style="max-width: 800px;">
+            SnackStack is your one-stop destination to discover, explore, and cook delicious recipes from around the world. 
+            Whether you're a seasoned chef or a beginner in the kitchen, SnackStack helps you find the perfect meal for every occasion.
+            </p>
+
+            <div class="row mt-5">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">🍳 Discover Recipes</h5>
+                        <p class="card-text text-muted">
+                        Explore thousands of global recipes with detailed ingredients, instructions, and images — all powered by TheMealDB API.
+                        </p>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">🔍 Smart Search</h5>
+                            <p class="card-text text-muted">
+                            Search your favorite meals instantly and filter by ingredients, region, or category with our advanced recipe search system.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">🥗 Learn & Cook</h5>
+                            <p class="card-text text-muted">
+                            Each recipe includes step-by-step guidance and ingredient visuals, making it easy for anyone to follow and master the art of cooking.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5">
+                <p class="text-secondary small">
+                    <strong>Data Source:</strong> Recipe information and images are provided by 
+                    <a href="https://www.themealdb.com/" target="_blank" class="text-decoration-none fw-semibold text-success">
+                    TheMealDB
+                    </a> — an open, crowd-sourced database of meals and recipes.
+                </p>
+
+                <p class="text-secondary small">
+                    SnackStack is a personal educational project built using HTML, Bootstrap, and JavaScript.  
+                    All meal data is licensed under <a href="https://www.themealdb.com/api.php" target="_blank" class="text-decoration-none text-success">TheMealDB API License</a>.
+                </p>
+
+                <p class="text-secondary mt-3">
+                    Made by <strong>Team SnackStack</strong>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!--Contact Us-->
+
+    <section id="contact" class="py-5">
+        <div class="container">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">Contact Us</h2>
+                <p class="text-muted">Have any feedback or suggestions? We’d love to hear from you!</p>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <form id="contactForm" class="p-4 border rounded shadow-sm">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" placeholder="you@example.com" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" rows="4" placeholder="Write your message..." required></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" id="sendBtn"
+                                class="btn btn-success px-4 d-flex align-items-center justify-content-center gap-2">
+                                <span id="sendBtnText">Send Message</span>
+                                <i id="sendBtnIcon" class="bi bi-send-fill" style="transition: transform 0.4s ease;"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--Email Js-->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <!-- ThemeToggle -->
+    <script src="https://cdn.jsdelivr.net/npm/theme-toggles@4.10.1/js/theme-toggle.min.js"></script>
+    <!-- Script -->
+    <script src="script.js"></script>
+</body>
+</html>

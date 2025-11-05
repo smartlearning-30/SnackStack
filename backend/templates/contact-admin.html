@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #fff9e6;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      background-color: #ffc107;
+      padding: 20px 0;
+      text-align: center;
+      color: #222;
+    }
+    .header img {
+      width: 60px;
+      height: 60px;
+    }
+    .container {
+      padding: 30px;
+      max-width: 600px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .title {
+      color: #333;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    .message {
+      background-color: #f7f7f7;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      border-radius: 5px;
+      font-size: 15px;
+      white-space: pre-line;
+    }
+    .footer {
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+      margin-top: 25px;
+    }
+    .footer a {
+      color: #ff9800;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png" alt="SnackStack Logo">
+    <h2>SnackStack</h2>
+  </div>
+
+  <div class="container">
+    <div class="title">🍴 You’ve received a new message!</div>
+
+    <p><strong>👤 Name:</strong> {{from_name}}</p>
+    <p><strong>📧 Email:</strong> {{from_email}}</p>
+
+    <div class="message">
+      <strong>💬 Message:</strong><br>
+      {{message}}
+    </div>
+
+    <div class="footer">
+      <p>Sent via <strong>SnackStack</strong> contact form</p>
+      <p>📅 {{date}} | 📧 snackstackapp@gmail.com</p>
+      <p>Made by the SnackStack Team</p>
+    </div>
+  </div>
+</body>
+</html>

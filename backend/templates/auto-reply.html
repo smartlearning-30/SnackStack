@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SnackStack - Thanks for Reaching Out!</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #fff9e6;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header {
+      background-color: #ffc107;
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 3px solid #ff9800;
+    }
+
+    .header img {
+      width: 60px;
+      height: 60px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      padding: 25px;
+      line-height: 1.6;
+    }
+
+    .greeting {
+      font-size: 19px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #222;
+    }
+
+    .message {
+      background: #fff4cc;
+      padding: 12px 15px;
+      border-radius: 6px;
+      border-left: 4px solid #ffc107;
+      margin-top: 12px;
+      margin-bottom: 20px;
+      white-space: pre-line;
+    }
+
+    .footer {
+      font-size: 13px;
+      color: #666;
+      margin-top: 25px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+      text-align: center;
+    }
+
+    .footer a {
+      color: #ff9800;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .signature {
+      margin-top: 25px;
+      font-size: 14px;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 22px;
+      background: #ff9800;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .button:hover {
+      background: #e68900;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png" alt="SnackStack Logo">
+    <h2>SnackStack</h2>
+  </div>
+
+  <div class="container">
+    <p class="greeting">Hey {{from_name}}, 👋</p>
+
+    <p>Thanks a bunch for getting in touch with us! We just wanted to let you know that we’ve received your message and will get back to you soon. 😊</p>
+
+    <div class="message">
+      <strong>💬 Your Message:</strong><br>
+      {{message}}
+    </div>
+
+    <p>We really appreciate you taking the time to reach out — your feedback helps us make SnackStack even better!</p>
+
+    <p>While you wait, you can check out some of our latest recipes and snack ideas:</p>
+
+    <a href="https://snackstack.com" class="button">Explore SnackStack 🍴</a>
+
+    <div class="signature">
+      <p>Warm regards,<br>
+      <strong>The SnackStack Team 🍔</strong><br>
+      📧 <a href="mailto:snackstackapp@gmail.com">snackstackapp@gmail.com</a><br>
+      🌐 <a href="https://snackstack.com">snackstack.com</a></p>
+    </div>
+
+    <div class="footer">
+      <p>This is an automatic confirmation from SnackStack.</p>
+      <p>© 2025 SnackStack — All Rights Reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
