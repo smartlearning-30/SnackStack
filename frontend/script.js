@@ -33,7 +33,46 @@ themeToggles.forEach(toggle => {
 });
 
 
+// MOBILE NAVBAR HANDLER
+const searchToggle = document.getElementById('searchToggle');
+const mobileSearchBar = document.getElementById('mobileSearchBar');
+const searchBoxMobile = document.getElementById('searchBoxMobile');
+const resultsBoxMobile = document.getElementById('resultsBoxMobile'); 
 
+searchToggle.addEventListener('click', () => {
+  const willShow = !mobileSearchBar.classList.contains('show');
+  mobileSearchBar.classList.toggle('show', willShow);
+  searchToggle.setAttribute('aria-expanded', String(willShow));
+
+  if (!willShow) {
+    resultsBoxMobile.style.display = 'none'; 
+  }
+  if (willShow && searchBoxMobile) {
+    requestAnimationFrame(() => searchBoxMobile.focus());
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+if (e.key === 'Escape') {
+    mobileSearchBar.classList.remove('show');
+    searchToggle.setAttribute('aria-expanded', 'false');
+    resultsBoxMobile.style.display = 'none'; 
+  }
+});
+
+document.querySelectorAll('.offcanvas .nav-link, .offcanvas .dropdown-item').forEach((link) => {
+  link.addEventListener('click', () => {
+    const offcanvasElement = document.querySelector('.offcanvas.show');
+    if (offcanvasElement) {
+      const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+      offcanvas.hide();
+    }
+  });
+});
+
+
+
+// Card Append Dynamically
 
 let cardappend=document.getElementById("cardAppend");
 
@@ -74,27 +113,30 @@ function appendcarddynamically(recipevalue){
     });
 }
 
-let viewportWidth = window.innerWidth;
+
+let value; 
 let itemsPerPage;
-let value = 0;
 
-if (viewportWidth > 768) {
-    value = 12;
-    itemsPerPage = 6;   
-} else if (viewportWidth > 577) {
-    value = 8;
-    itemsPerPage = 4;   
-} else {
-    value = 4;
-    itemsPerPage = 2;   
-}
-
-for(let i=0;i<value;i++)
-  {
-      fetch("https://www.themealdb.com/api/json/v1/1/random.php")
-      .then((response)=>response.json())
-      .then((data)=> appendcarddynamically(data.meals))
-  }
+window.addEventListener("load", () => {
+    let viewportWidth = window.innerWidth;
+    console.log(window.innerWidth);
+    if (viewportWidth >1200) {
+        value = 12;
+        itemsPerPage = 4; 
+    } else if (viewportWidth >= 992) {
+        value = 8;
+        itemsPerPage = 3; 
+    } else {
+        value = 4;
+        itemsPerPage = 2;
+    }
+    for(let i=0;i<value;i++)
+      {
+        fetch("https://www.themealdb.com/api/json/v1/1/random.php")
+        .then((response)=>response.json())
+        .then((data)=> appendcarddynamically(data.meals))
+      }
+});
 
 
 const randomRecipe = document.querySelectorAll(".randomRecipe"); 
@@ -239,6 +281,7 @@ buttons.forEach((btn, index) => {
 
             function updatePage(page) {
               currentPage = page;
+              console.log(itemsPerPage)
               renderResultsWithPagination(meals, currentPage, itemsPerPage, resultsBoxDesktop, updatePage);
               renderResultsWithPagination(meals, currentPage, itemsPerPage, resultsBoxMobile, updatePage);
               window.scrollTo({ top: 0, behavior: "smooth" }); 

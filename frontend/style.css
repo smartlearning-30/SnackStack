@@ -1,32 +1,43 @@
-
 /* Navbar */
-.dropdown 
-{
-    margin-right: 5px;
+.dropdown {
+  margin-right: 5px;
 }
 
+/* Mobile Search Bar */
+#mobileSearchBar {
+  display: block;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out;
+  position: relative;
+}
+#mobileSearchBar.show {
+  max-height: 220px;
+  opacity: 1;
+}
 
+/* Search Results */
 .results-box {
   background-color: var(--bs-body-bg);
-  max-height: 280px;  
-  overflow-x: auto;              
-  overflow-y: auto;             
-  white-space: nowrap;            
-  scroll-behavior: smooth;       
+  max-height: 280px;
+  overflow-x: auto;
+  overflow-y: auto;
+  white-space: nowrap;
+  scroll-behavior: smooth;
   transition: all 0.2s ease-in-out;
   border-radius: 8px;
   padding: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  scrollbar-width: thin;          
+  scrollbar-width: thin;
 }
 
-
 .results-box::-webkit-scrollbar {
-  height: 8px;                   
+  height: 8px;
 }
 
 .results-box::-webkit-scrollbar-track {
-  background: transparent;        
+  background: transparent;
 }
 
 .results-box::-webkit-scrollbar-thumb {
@@ -34,17 +45,15 @@
   border-radius: 10px;
 }
 
-
 .results-box .card {
   display: inline-block;
   vertical-align: top;
-  width: 12rem;                  
+  width: 12rem;
   margin-right: 12px;
-  white-space: normal;            
+  white-space: normal;
   transition: transform 0.2s ease-in-out;
   border-radius: 12px;
 }
-
 
 .results-box .card:hover {
   transform: translateY(-5px);
@@ -54,10 +63,9 @@
 .results-box .card img {
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
-  height: 200px !important; 
+  height: 200px !important;
   object-fit: cover;
 }
-
 
 .results-box .card-body {
   padding: 12px;
@@ -75,7 +83,6 @@
   color: var(--bs-secondary-color);
   margin-bottom: 0.8rem;
 }
-
 
 .results-box .btn {
   font-size: 0.875rem;

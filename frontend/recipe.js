@@ -281,17 +281,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// Search Function and Result Container
-
-let viewportWidth = window.innerWidth;
-let itemsPerPage;
-if (viewportWidth > 768) {
-    itemsPerPage = 6;   
-} else if (viewportWidth > 577) {
-    itemsPerPage = 4;  
-} else {
-    itemsPerPage = 2;  
-}
 
 const inputs = document.querySelectorAll(".searchInput");
 const buttons = document.querySelectorAll(".searchbtn");
@@ -388,6 +377,24 @@ function renderResultsWithPagination(meals, page, itemsPerPage, resultsBox, onPa
 }
 
 
+// Items Per Page
+function getItemsPerPage() {
+  const w = window.innerWidth;
+  if (w > 1200) return 4;      
+  if (w >= 992) return 3;    
+  return 2;                   
+}
+
+
+function debounce(fn, delay = 150) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), delay);
+  };
+}
+
+
 // SEARCH FUNCTION 
 buttons.forEach((btn, index) => {
   btn.addEventListener("click", async (event) => {
@@ -417,11 +424,21 @@ buttons.forEach((btn, index) => {
 
             function updatePage(page) {
               currentPage = page;
+              itemsPerPage = getItemsPerPage();
               renderResultsWithPagination(meals, currentPage, itemsPerPage, resultsBoxDesktop, updatePage);
               renderResultsWithPagination(meals, currentPage, itemsPerPage, resultsBoxMobile, updatePage);
               window.scrollTo({ top: 0, behavior: "smooth" }); 
           }
          updatePage(currentPage);
+
+         // Items Per Page Handler
+         window.addEventListener("resize", debounce(() => {
+            const newItems = getItemsPerPage();
+            if (newItems !== itemsPerPage) {
+              itemsPerPage = newItems;
+              updatePage(1);
+            }
+          }, 150));
         }
       } catch (error) {
         console.error("Error fetching recipe:", error);
