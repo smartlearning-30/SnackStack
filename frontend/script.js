@@ -77,16 +77,18 @@ function appendcarddynamically(recipevalue){
 let viewportWidth = window.innerWidth;
 let itemsPerPage;
 let value = 0;
-if(viewportWidth > 768){
-    value = 8;
-    itemsPerPage=4;
-} else if(viewportWidth > 577){
-    value = 4;
-    itemsPerPage=2;
-} else {
+
+if (viewportWidth > 768) {
     value = 12;
-    itemsPerPage=6;
+    itemsPerPage = 6;   
+} else if (viewportWidth > 577) {
+    value = 8;
+    itemsPerPage = 4;   
+} else {
+    value = 4;
+    itemsPerPage = 2;   
 }
+
 for(let i=0;i<value;i++)
   {
       fetch("https://www.themealdb.com/api/json/v1/1/random.php")

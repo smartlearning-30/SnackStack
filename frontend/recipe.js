@@ -285,12 +285,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 let viewportWidth = window.innerWidth;
 let itemsPerPage;
-if(viewportWidth > 768){
-    itemsPerPage=4;
-} else if(viewportWidth > 577){
-    itemsPerPage=2;
+if (viewportWidth > 768) {
+    itemsPerPage = 6;   
+} else if (viewportWidth > 577) {
+    itemsPerPage = 4;  
 } else {
-    itemsPerPage=6;
+    itemsPerPage = 2;  
 }
 
 const inputs = document.querySelectorAll(".searchInput");
