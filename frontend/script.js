@@ -270,69 +270,126 @@ if (closeBtnDesktop && resultsBoxDesktop) {
 
 //Email Response System
 
-document.getElementById("contactForm").addEventListener("submit", async function(event) {
+
+emailjs.init("aplkpXHm-fnwl1UIP");
+
+document.getElementById("contactForm").addEventListener("submit", function(event) {
   event.preventDefault();
   const sendBtn = document.getElementById("sendBtn");
   const sendBtnText = document.getElementById("sendBtnText");
   const sendBtnIcon = document.getElementById("sendBtnIcon");
-
   sendBtn.classList.add("sending");
   sendBtn.disabled = true;
   sendBtnText.textContent = "Sending...";
   sendBtnIcon.classList.add("fly");
+  setTimeout(() => {
+    sendBtnIcon.classList.remove("fly");
+  }, 600);
 
-  setTimeout(() => sendBtnIcon.classList.remove("fly"), 600);
+  const templateParams = {
+    from_name: document.getElementById("name").value,
+    from_email: document.getElementById("email").value,
+    message: document.getElementById("message").value,
+    date: new Date().toLocaleString()
 
-  // Collect form data
-  const from_name = document.getElementById("name").value;
-  const from_email = document.getElementById("email").value;
-  const message = document.getElementById("message").value;
+  };
 
-  try {
-    const response = await fetch("https://snackstack-qoie.onrender.com/api/contact", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ from_name, from_email, message }),
-    });
+  emailjs.send("snackstack", "template_87i67lt", templateParams)
 
-    const data = await response.json();
-
-    if (data.success) {
-      toastmessage.textContent = "✅ Message sent successfully!";
-      toast.show();
-
-      sendBtnText.textContent = "Sent! ✅";
-      sendBtnIcon.classList.replace("bi-send-fill", "bi-check-circle-fill");
-
-      setTimeout(() => {
-        sendBtn.disabled = false;
-        sendBtn.classList.remove("sending");
-        sendBtnText.textContent = "Send Message";
-        sendBtnIcon.classList.replace("bi-check-circle-fill", "bi-send-fill");
-      }, 2000);
-
-      this.reset();
-    } else {
-      throw new Error(data.message || "Unknown error");
-    }
-  } catch (error) {
-    console.error("Error sending message:", error);
-    toastmessage.textContent = "❌ Failed to send message. Please try again later.";
+  .then(() => {
+    toastmessage.textContent = "✅ Message sent successfully!";
     toast.show();
+    sendBtnText.textContent = "Sent! ✅";
 
-    sendBtnText.textContent = "Failed!";
-    sendBtnIcon.classList.replace("bi-send-fill", "bi-x-circle-fill");
-
+    sendBtnIcon.classList.replace("bi-send-fill", "bi-check-circle-fill");
     setTimeout(() => {
       sendBtn.disabled = false;
       sendBtn.classList.remove("sending");
       sendBtnText.textContent = "Send Message";
-      sendBtnIcon.classList.replace("bi-x-circle-fill", "bi-send-fill");
+      sendBtnIcon.classList.replace("bi-check-circle-fill", "bi-send-fill");
     }, 2000);
-  }
+    this.reset();
+
+  }, (error) => {
+      toastmessage.textContent = "❌ Failed to send message. Please try again later.";
+      toast.show();
+      console.error("EmailJS Error:", error);
+      sendBtnText.textContent = "Failed!";
+      sendBtnIcon.classList.replace("bi-send-fill", "bi-x-circle-fill");
+      setTimeout(() => {
+        sendBtn.disabled = false;
+        sendBtn.classList.remove("sending");
+        sendBtnText.textContent = "Send Message";
+        sendBtnIcon.classList.replace("bi-x-circle-fill", "bi-send-fill");
+        }, 2000);
+  });
 });
+
+
+
+// document.getElementById("contactForm").addEventListener("submit", async function(event) {
+//   event.preventDefault();
+//   const sendBtn = document.getElementById("sendBtn");
+//   const sendBtnText = document.getElementById("sendBtnText");
+//   const sendBtnIcon = document.getElementById("sendBtnIcon");
+
+//   sendBtn.classList.add("sending");
+//   sendBtn.disabled = true;
+//   sendBtnText.textContent = "Sending...";
+//   sendBtnIcon.classList.add("fly");
+
+//   setTimeout(() => sendBtnIcon.classList.remove("fly"), 600);
+
+//   // Collect form data
+//   const from_name = document.getElementById("name").value;
+//   const from_email = document.getElementById("email").value;
+//   const message = document.getElementById("message").value;
+
+//   try {
+//     const response = await fetch("https://snackstack-qoie.onrender.com/api/contact", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({ from_name, from_email, message }),
+//     });
+
+//     const data = await response.json();
+
+//     if (data.success) {
+//       toastmessage.textContent = "✅ Message sent successfully!";
+//       toast.show();
+
+//       sendBtnText.textContent = "Sent! ✅";
+//       sendBtnIcon.classList.replace("bi-send-fill", "bi-check-circle-fill");
+
+//       setTimeout(() => {
+//         sendBtn.disabled = false;
+//         sendBtn.classList.remove("sending");
+//         sendBtnText.textContent = "Send Message";
+//         sendBtnIcon.classList.replace("bi-check-circle-fill", "bi-send-fill");
+//       }, 2000);
+
+//       this.reset();
+//     } else {
+//       throw new Error(data.message || "Unknown error");
+//     }
+//   } catch (error) {
+//     console.error("Error sending message:", error);
+//     toastmessage.textContent = "❌ Failed to send message. Please try again later.";
+//     toast.show();
+
+//     sendBtnText.textContent = "Failed!";
+//     sendBtnIcon.classList.replace("bi-send-fill", "bi-x-circle-fill");
+
+//     setTimeout(() => {
+//       sendBtn.disabled = false;
+//       sendBtn.classList.remove("sending");
+//       sendBtnText.textContent = "Send Message";
+//       sendBtnIcon.classList.replace("bi-x-circle-fill", "bi-send-fill");
+//     }, 2000);
+//   }
+// });
 
 
 // Dropdown Categories handler
