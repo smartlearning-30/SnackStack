@@ -334,45 +334,44 @@ function renderResultsWithPagination(meals, page, itemsPerPage, resultsBox, onPa
   cardsContainer.style.maxWidth = "100%";
   cardsContainer.style.overflowY = "hidden";
 
-
   paginatedMeals.forEach(meal => {
     cardsContainer.innerHTML += createRecipeCard(meal);
   });
 
   resultsBox.appendChild(cardsContainer);
 
-  // Add pagination buttons at the bottom
+  // Add Bootstrap pagination at the bottom
   const totalPages = Math.ceil(meals.length / itemsPerPage);
   if (totalPages > 1) {
-    const paginationDiv = document.createElement("div");
-    paginationDiv.className = "d-flex justify-content-center mt-3 flex-wrap";
+    const paginationWrapper = document.createElement("nav");
+    paginationWrapper.setAttribute("aria-label", "Recipe Pagination");
+    const paginationUl = document.createElement("ul");
+    paginationUl.className = "pagination justify-content-center flex-wrap mt-3";
 
     // Previous button
-    const prevBtn = document.createElement("button");
-    prevBtn.className = "btn btn-outline-secondary mx-1";
-    prevBtn.textContent = "Previous";
-    prevBtn.disabled = page === 1;
-    prevBtn.addEventListener("click", () => onPageClick(page - 1));
-    paginationDiv.appendChild(prevBtn);
-
+    const prevLi = document.createElement("li");
+    prevLi.className = "page-item" + (page === 1 ? " disabled" : "");
+    prevLi.innerHTML = `<button class="page-link">Previous</button>`;
+    if (page > 1)
+      prevLi.querySelector("button").addEventListener("click", () => onPageClick(page - 1));
+    paginationUl.appendChild(prevLi);
     // Page numbers
     for (let i = 1; i <= totalPages; i++) {
-      const pageBtn = document.createElement("button");
-      pageBtn.className = "btn mx-1 " + (i === page ? "btn-success" : "btn-outline-success");
-      pageBtn.textContent = i;
-      pageBtn.addEventListener("click", () => onPageClick(i));
-      paginationDiv.appendChild(pageBtn);
+      const li = document.createElement("li");
+      li.className = "page-item" + (i === page ? " active" : "");
+      li.innerHTML = `<button class="page-link">${i}</button>`;
+      li.querySelector("button").addEventListener("click", () => onPageClick(i));
+      paginationUl.appendChild(li);
     }
-
     // Next button
-    const nextBtn = document.createElement("button");
-    nextBtn.className = "btn btn-outline-secondary mx-1";
-    nextBtn.textContent = "Next";
-    nextBtn.disabled = page === totalPages;
-    nextBtn.addEventListener("click", () => onPageClick(page + 1));
-    paginationDiv.appendChild(nextBtn);
-
-    resultsBox.appendChild(paginationDiv);
+    const nextLi = document.createElement("li");
+    nextLi.className = "page-item" + (page === totalPages ? " disabled" : "");
+    nextLi.innerHTML = `<button class="page-link">Next</button>`;
+    if (page < totalPages)
+      nextLi.querySelector("button").addEventListener("click", () => onPageClick(page + 1));
+    paginationUl.appendChild(nextLi);
+    paginationWrapper.appendChild(paginationUl);
+    resultsBox.appendChild(paginationWrapper);
   }
 }
 
