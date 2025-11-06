@@ -115,20 +115,15 @@ function appendcarddynamically(recipevalue){
 
 
 let value; 
-let itemsPerPage;
-
 window.addEventListener("load", () => {
     let viewportWidth = window.innerWidth;
     console.log(window.innerWidth);
     if (viewportWidth >1200) {
         value = 12;
-        itemsPerPage = 4; 
     } else if (viewportWidth >= 992) {
         value = 8;
-        itemsPerPage = 3; 
     } else {
         value = 4;
-        itemsPerPage = 2;
     }
     for(let i=0;i<value;i++)
       {
@@ -143,13 +138,13 @@ const randomRecipe = document.querySelectorAll(".randomRecipe");
 
 randomRecipe.forEach(link => {
     link.addEventListener("click", function(event) {
-        event.preventDefault(); 
-        fetch("https://www.themealdb.com/api/json/v1/1/random.php")
-            .then(response => response.json())
-            .then(data => {
-                let randomvalue = data.meals[0].idMeal;
-                window.location.href = `recipe.html?id=${randomvalue}`;
-            });
+    event.preventDefault(); 
+    fetch("https://www.themealdb.com/api/json/v1/1/random.php")
+        .then(response => response.json())
+        .then(data => {
+            let randomvalue = data.meals[0].idMeal;
+            window.location.href = `recipe.html?id=${randomvalue}`;
+        });
     });
 });
 
@@ -161,9 +156,6 @@ let toastmessage=document.getElementById("toast-message");
 const toastEl = document.getElementById('myToast');
 const toast = new bootstrap.Toast(toastEl, { delay: 3000 }); 
 
-
-
-// Search Function and Result Container
 
 //Pagination Recipe Items
 function createRecipeCard(meal) {
@@ -252,6 +244,24 @@ function renderResultsWithPagination(meals, page, itemsPerPage, resultsBox, onPa
 }
 
 
+// Items Per Page
+function getItemsPerPage() {
+  const w = window.innerWidth;
+  if (w > 1200) return 4;      
+  if (w >= 992) return 3;    
+  return 2;                   
+}
+
+
+function debounce(fn, delay = 150) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), delay);
+  };
+}
+
+
 // SEARCH FUNCTION 
 buttons.forEach((btn, index) => {
   btn.addEventListener("click", async (event) => {
@@ -281,12 +291,21 @@ buttons.forEach((btn, index) => {
 
             function updatePage(page) {
               currentPage = page;
-              console.log(itemsPerPage)
+              itemsPerPage = getItemsPerPage();
               renderResultsWithPagination(meals, currentPage, itemsPerPage, resultsBoxDesktop, updatePage);
               renderResultsWithPagination(meals, currentPage, itemsPerPage, resultsBoxMobile, updatePage);
               window.scrollTo({ top: 0, behavior: "smooth" }); 
           }
          updatePage(currentPage);
+
+         // Items Per Page Handler
+         window.addEventListener("resize", debounce(() => {
+            const newItems = getItemsPerPage();
+            if (newItems !== itemsPerPage) {
+              itemsPerPage = newItems;
+              updatePage(1);
+            }
+          }, 150));
         }
       } catch (error) {
         console.error("Error fetching recipe:", error);
@@ -302,6 +321,7 @@ buttons.forEach((btn, index) => {
     }
   });
 });
+
 
 //Result Modal Close Button
 const closeBtnDesktop = document.getElementById("closeResultsDesktop");
