@@ -4,86 +4,84 @@ import fs from "fs";
 import dotenv from "dotenv";
 import path from "path";
 import cors from "cors";
+import { fileURLToPath } from 'url'; 
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename); 
 
 const app = express();
 
 app.use(cors({
-  origin: "https://snack-stack-coral.vercel.app",
-  methods: ["GET", "POST"],
-  allowedHeaders: ["Content-Type"]
+    origin: "https://snack-stack-coral.vercel.app",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"]
 }));
 
 app.use(express.json());
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true, 
-  pool: true, 
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  },
-  connectionTimeout: 10000,
+    service: 'gmail', 
+    auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
+    },
 });
 
-// === Contact API Route ===
+app.get("/", (req, res) => {
+    res.status(200).json({ success: true, message: "Server is running smoothly." });
+});
+
 app.post("/api/contact", async (req, res) => {
-  const { from_name, from_email, message } = req.body;
+    const { from_name, from_email, message } = req.body;
 
-  // basic validation
-  if (!from_name || !from_email || !message) {
-    return res.status(400).json({ success: false, message: "All fields are required." });
-  }
+    if (!from_name || !from_email || !message) {
+        return res.status(400).json({ success: false, message: "All fields are required." });
+    }
 
-  try {
-    const templatePath = path.join(process.cwd(), "templates", "contact-admin.html");
-    let html = fs.readFileSync(templatePath, "utf-8");
+    try {
+        const templatePath = path.join(__dirname, "templates", "contact-admin.html");
+        let html = fs.readFileSync(templatePath, "utf-8");
 
-    const date = new Date().toLocaleString("en-IN", {
-      dateStyle: "long",
-      timeStyle: "short",
-      timeZone: "Asia/Kolkata",
-    });
+        const date = new Date().toLocaleString("en-IN", {
+            dateStyle: "long",
+            timeStyle: "short",
+            timeZone: "Asia/Kolkata",
+        });
 
-    html = html
-      .replace("{{from_name}}", from_name)
-      .replace("{{from_email}}", from_email)
-      .replace("{{message}}", message)
-      .replace("{{date}}", date);
+        html = html
+            .replace("{{from_name}}", from_name)
+            .replace("{{from_email}}", from_email)
+            .replace("{{message}}", message)
+            .replace("{{date}}", date);
 
-    // === 1️⃣ Send to Admin ===
-    const adminInfo = await transporter.sendMail({
-      from: `"SnackStack Contact Form" <${process.env.MAIL_USER}>`,
-      to: process.env.MAIL_USER,
-      subject: `📩 New message from ${from_name}`,
-      html,
-    });
+        await transporter.sendMail({
+            from: `"SnackStack Contact Form" <${process.env.MAIL_USER}>`,
+            to: process.env.MAIL_USER,
+            subject: `📩 New message from ${from_name}`,
+            html,
+        });
 
-    // === 2️⃣ Send Auto-Reply to User ===
-    const replyTemplatePath = path.join(process.cwd(), "templates", "auto-reply.html");
-    let replyHTML = fs.readFileSync(replyTemplatePath, "utf-8");
+        const replyTemplatePath = path.join(__dirname, "templates", "auto-reply.html");
+        let replyHTML = fs.readFileSync(replyTemplatePath, "utf-8");
 
-    replyHTML = replyHTML
-      .replace("{{from_name}}", from_name)
-      .replace("{{message}}", message);
+        replyHTML = replyHTML
+            .replace("{{from_name}}", from_name)
+            .replace("{{message}}", message);
 
+        await transporter.sendMail({
+            from: `"SnackStack Support" <${process.env.MAIL_USER}>`,
+            to: from_email,
+            replyTo: process.env.MAIL_USER,
+            subject: "Thanks for contacting SnackStack! 🍔",
+            html: replyHTML,
+        });
 
-    await transporter.sendMail({
-        from: `"SnackStack Support" <${process.env.MAIL_USER}>`,
-        to: from_email,
-        replyTo: process.env.MAIL_USER,
-        subject: "Thanks for contacting SnackStack! 🍔",
-        html: replyHTML,
-    });
-
-    res.json({ success: true, message: "Message sent successfully!" });
-  } catch (error) {
-    console.error("❌ Error while sending emails:", error);
-    res.status(500).json({ success: false, message: "Failed to send message." });
-  }
+        res.json({ success: true, message: "Message sent successfully!" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Failed to send message." });
+    }
 });
 
 const PORT = process.env.PORT || 3000;
