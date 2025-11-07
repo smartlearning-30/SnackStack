@@ -107,80 +107,35 @@ async function loadCategoryRecipes(category) {
 
       container.appendChild(grid);
 
-      // Pagination setup
+      // Load Next / Previous setup
       const totalPages = Math.ceil(meals.length / itemsPerPage);
       if (totalPages > 1) {
-        const paginationNav = document.createElement("nav");
-        paginationNav.className = "mt-3";
+        const navDiv = document.createElement("div");
+        navDiv.className = "d-flex justify-content-center align-items-center gap-3 mt-3 flex-wrap";
 
-        const paginationUl = document.createElement("ul");
-        paginationUl.className = "pagination justify-content-center flex-nowrap overflow-auto";
-        paginationUl.style.scrollbarWidth = "thin"; 
-        paginationUl.style.WebkitOverflowScrolling = "touch"; 
+        const prevBtn = document.createElement("button");
+        prevBtn.className = "btn btn-outline-warning m-2";
+        prevBtn.textContent = "⬅️ Previous";
+        prevBtn.disabled = page === 1;
+        prevBtn.addEventListener("click", () => renderPage(page - 1));
 
-        // Prev button
-        const prevLi = document.createElement("li");
-        prevLi.className = `page-item ${page === 1 ? "disabled" : ""}`;
-        prevLi.innerHTML = `<button class="page-link">Previous</button>`;
-        if (page > 1) prevLi.querySelector("button").addEventListener("click", () => renderPage(page - 1));
-        paginationUl.appendChild(prevLi);
+        const info = document.createElement("span");
+        info.className = "text-muted small fw-semibold";
+        info.textContent = `Page ${page} of ${totalPages}`;
 
-        const maxButtons = 1;
-        let start = Math.max(1, page - Math.floor(maxButtons / 2));
-        let end = Math.min(totalPages, start + maxButtons - 1);
+        const nextBtn = document.createElement("button");
+        nextBtn.className = "btn btn-warning m-2";
+        nextBtn.textContent = "Next ➡️";
+        nextBtn.disabled = page === totalPages;
+        nextBtn.addEventListener("click", () => renderPage(page + 1));
 
-        if (end - start < maxButtons - 1) {
-          start = Math.max(1, end - maxButtons + 1);
-        }
-        if (page < start) start = page;
-        if (page > end) end = page;
-
-
-
-        if (start > 1) {
-          const firstLi = document.createElement("li");
-          firstLi.className = "page-item";
-          firstLi.innerHTML = `<button class="page-link">1</button>`;
-          firstLi.querySelector("button").addEventListener("click", () => renderPage(1));
-          paginationUl.appendChild(firstLi);
-
-          const dotsLi = document.createElement("li");
-          dotsLi.className = "page-item disabled";
-          dotsLi.innerHTML = `<span class="page-link">...</span>`;
-          paginationUl.appendChild(dotsLi);
-        }
-
-
-        for (let i = start; i <= end; i++) {
-          const li = document.createElement("li");
-          li.className = `page-item ${i === page ? "active" : ""}`;
-          li.innerHTML = `<button class="page-link">${i}</button>`;
-          li.querySelector("button").addEventListener("click", () => renderPage(i));
-          paginationUl.appendChild(li);
-        }
-
-        if (end < totalPages) {
-          const dotsLi = document.createElement("li");
-          dotsLi.className = "page-item disabled";
-          dotsLi.innerHTML = `<span class="page-link">...</span>`;
-          paginationUl.appendChild(dotsLi);
-
-          const lastLi = document.createElement("li");
-          lastLi.className = "page-item";
-          lastLi.innerHTML = `<button class="page-link">${totalPages}</button>`;
-          lastLi.querySelector("button").addEventListener("click", () => renderPage(totalPages));
-          paginationUl.appendChild(lastLi);
-        }
-
-        // Next button
-        const nextLi = document.createElement("li");
-        nextLi.className = `page-item ${page === totalPages ? "disabled" : ""}`;
-        nextLi.innerHTML = `<button class="page-link">Next</button>`;
-        if (page < totalPages) nextLi.querySelector("button").addEventListener("click", () => renderPage(page + 1));
-        paginationUl.appendChild(nextLi);
-        paginationNav.appendChild(paginationUl);
-        container.appendChild(paginationNav);
+        navDiv.appendChild(prevBtn);
+        navDiv.appendChild(info);
+        navDiv.appendChild(nextBtn);
+        container.appendChild(navDiv);
       }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
     }
     renderPage(currentPage);
     // 🌀 Auto toggle pagination when resizing

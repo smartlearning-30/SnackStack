@@ -12,7 +12,7 @@
   <!-- ThemeToggle -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-toggles@4.10.1/css/classic.min.css">
   <!-- CSS -->
-  <link href="style.css" rel="stylesheet">
+  <!-- <link href="style.css" rel="stylesheet"> -->
 <style>
 /* Navbar */
 .dropdown {
@@ -49,27 +49,19 @@
   scrollbar-width: thin;
 }
 
-#resultsBoxMobile {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  z-index: 1060;
-}
-
+/* Scrollbar Styling */
 .results-box::-webkit-scrollbar {
   height: 8px;
 }
-
 .results-box::-webkit-scrollbar-track {
   background: transparent;
 }
-
 .results-box::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0.25);
   border-radius: 10px;
 }
 
+/* Cards inside results */
 .results-box .card {
   display: inline-block;
   vertical-align: top;
@@ -113,12 +105,68 @@
   font-size: 0.875rem;
   padding: 6px 12px;
 }
+
+/* RESPONSIVE TWEAKS */
+
+/* Medium Screens (≤992px) */
+@media (max-width: 992px) {
+  .results-box .card {
+    width: 10rem;
+  }
+  .results-box .card img {
+    height: 160px !important;
+  }
+}
+
+/* Small Screens (≤768px) */
+@media (max-width: 768px) {
+  .results-box .card {
+    width: 8.5rem;
+    margin-right: 10px;
+  }
+  .results-box .card img {
+    height: 140px !important;
+  }
+  .results-box .card-title {
+    font-size: 0.9rem;
+  }
+  .results-box .card-text {
+    font-size: 0.78rem;
+  }
+  .results-box .btn {
+    font-size: 0.75rem;
+    padding: 5px 10px;
+  }
+}
+
+/* Extra Small (≤576px) */
+@media (max-width: 576px) {
+  .results-box {
+    padding: 6px;
+    max-height: 260px;
+  }
+  .results-box .card {
+    width: 7.5rem;
+    margin-right: 8px;
+  }
+  .results-box .card img {
+    height: 120px !important;
+  }
+  .results-box .card-title {
+    font-size: 0.85rem;
+  }
+  .results-box .btn {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+  }
+}
+
 </style>
 
 </head>
 <body>
-
-
+    <!-- Navbar using the Bootstrap -->
+    
     <!-- For Large Screen -->
     <nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary d-none d-lg-flex">
         <div class="container-fluid justify-content-between align-items-center">
@@ -130,8 +178,8 @@
                     <span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
                 </button>
 
-                <div id="resultsBoxDesktop" class="results-box shadow border rounded list-group position-absolute translate-middle-x mt-5 w-100"
-                    style="z-index:1050; display:none; left: 63%;">
+                <div id="resultsBoxDesktop" class="results-box shadow border rounded list-group position-absolute top-100 start-50 translate-middle-x mt-3 w-100"
+                  style="z-index: 1050; display: none;">
                 </div>
             </form>
 
@@ -179,7 +227,7 @@
             </ul>
         </div>
     </nav>
-
+    <!-- For Small Screen -->
     <nav class="navbar sticky-top bg-body-tertiary fixed-top d-lg-none shadow-sm">
       <div class="container-fluid d-flex justify-content-between align-items-center">
         <a class="navbar-brand fw-bold" href="#">🍔 SnackStack</a>
@@ -239,71 +287,69 @@
       </div>
     </nav>
 
-<!-- Slide-Down Search Bar -->
-<div id="mobileSearchBar" class="bg-body-tertiary d-lg-none p-2 shadow-sm">
-  <div class="container-fluid">
-    <form class="d-flex position-relative" role="search">
-      <input class="form-control me-2 searchInput" id="searchBoxMobile" type="search"
-             placeholder="Search recipes..." aria-label="Search" />
-      <button class="btn btn-outline-success searchbtn" type="submit">
-        <span class="button-text">Search</span>
-        <span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
-      </button>
+    <!-- Slide-Down Search Bar For Small -->
+    <div id="mobileSearchBar" class="bg-body-tertiary d-lg-none p-2 shadow-sm">
+        <div class="container-fluid">
+            <form class="d-flex position-relative" role="search">
+            <input class="form-control me-2 searchInput" id="searchBoxMobile" type="search"
+                    placeholder="Search recipes..." aria-label="Search"/>
+            <button class="btn btn-outline-success searchbtn" type="submit">
+                <span class="button-text">Search</span>
+                <span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+            </button>
+            </form>
+        </div>
+    </div>
 
-      <div class="results-box shadow border rounded list-group position-absolute mt-1"
-           id="resultsBoxMobile"
-           style="display: none; width: 100%;">
+    <div class="p-2 shadow-sm d-flex justify-content-center position-relative d-lg-none" style="z-index: 2000;">
+      <div id="resultsBoxMobile" 
+        class="results-box shadow border rounded list-group position-absolute mt-1 w-75"
+        style="display: none;">
       </div>
-    </form>
-  </div>
-</div>
+    </div>
+
+    <!-- Main Image -->
+    <picture>
+        <img src="Heroimg.png" class="img-fluid" alt="">
+    </picture>
+
+    <!-- Main Content -->
+     <main>
+        <div id="MainContent">
+            <!-- Dynamically append content by the javascript  -->
+            <div class="container-fluid">
+                <div class="row" id="cardAppend">
+                    <div class="col-12">
+                        <h1 class="mainHeading">RECIPES</h1>
+                    </div>  
+                </div>
+            </div>
+        </div>
+     </main>
+    <!-- Toast Component -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+        <div id="myToast" class="toast align-items-center text-white bg-dark fade custom-border" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toast-message">
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!--About Section-->
 
 
-<script>
-const searchToggle = document.getElementById('searchToggle');
-const mobileSearchBar = document.getElementById('mobileSearchBar');
-const searchBoxMobile = document.getElementById('searchBoxMobile');
+    <!--Contact Us-->
 
-searchToggle.addEventListener('click', () => {
-  const willShow = !mobileSearchBar.classList.contains('show');
-  mobileSearchBar.classList.toggle('show', willShow);
-  searchToggle.setAttribute('aria-expanded', String(willShow));
-  if (willShow && searchBoxMobile) {
-    requestAnimationFrame(() => searchBoxMobile.focus());
-  }
-});
 
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    mobileSearchBar.classList.remove('show');
-    searchToggle.setAttribute('aria-expanded', 'false');
-  }
-});
-
-let lastScrollY = window.scrollY;
-window.addEventListener("scroll", () => {
-  if (window.innerWidth < 992) {
-    const currentScrollY = window.scrollY;
-    if (currentScrollY > lastScrollY && currentScrollY > 60) {
-      mobileSearchBar.classList.remove("show");
-    } else if (currentScrollY < lastScrollY) {
-      mobileSearchBar.classList.add("show");
-    }
-    lastScrollY = currentScrollY;
-  }
-});
-
-document.querySelectorAll('.offcanvas .nav-link, .offcanvas .dropdown-item').forEach((link) => {
-  link.addEventListener('click', () => {
-    const offcanvasElement = document.querySelector('.offcanvas.show');
-    if (offcanvasElement) {
-      const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
-      offcanvas.hide();
-    }
-  });
-});
-</script>
-
-<script src="script.js"></script>
+    <!--Email Js-->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <!-- ThemeToggle -->
+    <script src="https://cdn.jsdelivr.net/npm/theme-toggles@4.10.1/js/theme-toggle.min.js"></script>
+    <!-- Script -->
+    <script src="script.js"></script>
 </body>
 </html>
