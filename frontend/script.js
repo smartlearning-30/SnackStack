@@ -131,9 +131,9 @@ window.addEventListener("load", () => {
     }
     for(let i=0;i<value;i++)
       {
-        // fetch("https://www.themealdb.com/api/json/v1/1/random.php")
-        // .then((response)=>response.json())
-        // .then((data)=> appendcarddynamically(data.meals))
+        fetch("https://www.themealdb.com/api/json/v1/1/random.php")
+        .then((response)=>response.json())
+        .then((data)=> appendcarddynamically(data.meals))
       }
 });
 
