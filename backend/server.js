@@ -14,7 +14,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 app.use(cors({
-    origin: "*",
+    origin: "https://snack-stack-coral.vercel.app", 
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"]
 }));
@@ -25,7 +25,7 @@ const transporter = nodemailer.createTransport({
     service: 'gmail', 
     auth: {
         user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
+        pass: process.env.MAIL_PASS, // This MUST be the App Password
     },
 });
 
@@ -41,6 +41,8 @@ app.post("/api/contact", async (req, res) => {
     }
 
     try {
+        console.log("DEBUG: Request received and validation passed."); // <-- DEBUG 1
+
         const templatePath = path.join(__dirname, "templates", "contact-admin.html");
         let html = fs.readFileSync(templatePath, "utf-8");
 
@@ -56,6 +58,7 @@ app.post("/api/contact", async (req, res) => {
             .replace("{{message}}", message)
             .replace("{{date}}", date);
 
+        // === Send to Admin ===
         await transporter.sendMail({
             from: `"SnackStack Contact Form" <${process.env.MAIL_USER}>`,
             to: process.env.MAIL_USER,
@@ -63,6 +66,7 @@ app.post("/api/contact", async (req, res) => {
             html,
         });
 
+        // === Send Auto-Reply to User ===
         const replyTemplatePath = path.join(__dirname, "templates", "auto-reply.html");
         let replyHTML = fs.readFileSync(replyTemplatePath, "utf-8");
 
@@ -80,6 +84,7 @@ app.post("/api/contact", async (req, res) => {
 
         res.json({ success: true, message: "Message sent successfully!" });
     } catch (error) {
+        console.error("DEBUG: Full Email Error Object:", error); // <-- DEBUG 2: Log the full error
         res.status(500).json({ success: false, message: "Failed to send message." });
     }
 });
