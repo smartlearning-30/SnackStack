@@ -15,128 +15,121 @@
 </head>
   <body>
     <!-- Navbar using the Bootstrap -->
-    
-    <!-- For Large Screen -->
-    <nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary d-none d-lg-flex">
+    <nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary shadow-sm">
         <div class="container-fluid justify-content-between align-items-center">
-            <a class="navbar-brand flex-grow-0 me-4">🍔 SnackStack</a>
-            <form class="d-flex flex-grow-1 justify-content-center position-relative" role="search">
+
+            <a class="navbar-brand fw-bold" href="index.html">🍔 SnackStack</a>
+
+            <form class="d-flex flex-grow-1 justify-content-center position-relative d-none d-lg-flex" role="search">
                 <input class="form-control w-50 me-2 searchInput" id="searchBoxDesktop" type="search" placeholder="Enter The Recipe Name" aria-label="Search"/>
                 <button class="btn btn-outline-success searchbtn" type="submit">
                     <span class="button-text">Search</span>
                     <span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
                 </button>
-
-                <div id="resultsBoxDesktop" class="results-box shadow border rounded list-group position-absolute top-100 start-50 translate-middle-x mt-3 w-100"
-                  style="z-index: 1050; display: none;">
+                <div id="resultsBoxDesktop" class="justify-content-center results-box shadow border rounded list-group position-absolute top-100 mt-3 w-100" style="z-index: 1050; display: none;">
                 </div>
             </form>
 
-            <!-- Theme toggle code -->
-            <label class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
-                <input type="checkbox" id="themeChecked">
-                <div class="toggle-switch">
-                    <div class="toggle-circle"></div>
-                    <div class="icon moon">🌙</div>
-                    <div class="icon sun">🌞</div>
-                </div>
-            </label>
-
-            <ul class="navbar-nav flex-grow-0 d-flex align-items-center">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="index.html">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link randomRecipe" href="#" >Random</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Categories
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Beef</a></li>
-                        <li><a class="dropdown-item" href="#">Chicken</a></li>
-                        <li><a class="dropdown-item" href="#">Dessert</a></li>
-                        <li><a class="dropdown-item" href="#">Lamb</a></li>
-                        <li><a class="dropdown-item" href="#">Miscellaneous</a></li>
-                        <li><a class="dropdown-item" href="#">Pasta</a></li>
-                        <li><a class="dropdown-item" href="#">Pork</a></li>
-                        <li><a class="dropdown-item" href="#">Seafood</a></li>
-                        <li><a class="dropdown-item" href="#">Side</a></li>
-                        <li><a class="dropdown-item" href="#">Starter</a></li>
-                        <li><a class="dropdown-item" href="#">Vegan</a></li>
-                        <li><a class="dropdown-item" href="#">Vegetarian</a></li>
-                        <li><a class="dropdown-item" href="#">Breakfast</a></li>
-                        <li><a class="dropdown-item" href="#">Goat</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#about">About</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <!-- For Small Screen -->
-    <nav class="navbar sticky-top bg-body-tertiary fixed-top d-lg-none shadow-sm">
-      <div class="container-fluid d-flex justify-content-between align-items-center">
-        <a class="navbar-brand fw-bold" href="index.html">🍔 SnackStack</a>
-        <div class="d-flex align-items-center">
-          <button class="btn p-2 me-2" id="searchToggle" type="button" aria-expanded="false" aria-label="Search">
-            <i class="bi bi-search fs-5"></i>
-          </button>
-          <label class="theme-toggle me-2" id="themeToggleSmall" title="Toggle theme" aria-label="Toggle theme">
-            <input type="checkbox" id="themeCheckedSmall">
-            <div class="toggle-switch">
-              <div class="toggle-circle"></div>
-              <div class="icon moon">🌙</div>
-              <div class="icon sun">🌞</div>
+            <div class="d-flex d-lg-none align-items-center">
+                <button class="btn p-2 me-2" id="searchToggle" type="button" aria-expanded="false" aria-label="Search">
+                    <i class="bi bi-search fs-5"></i>
+                </button>
+                <label class="theme-toggle me-2" id="themeToggleSmall" title="Toggle theme" aria-label="Toggle theme">
+                    <input type="checkbox" id="themeCheckedSmall">
+                    <div class="toggle-switch">
+                        <div class="toggle-circle"></div>
+                        <div class="icon moon">🌙</div>
+                        <div class="icon sun">🌞</div>
+                    </div>
+                </label>
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
             </div>
-          </label>
-          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-                  data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar"
-                  aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-        </div>
 
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
-            aria-labelledby="offcanvasNavbarLabel">
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">🍔 SnackStack</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-          <div class="offcanvas-body">
-            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-              <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
-              <li class="nav-item"><a class="nav-link randomRecipe" href="#">RandomRecipe</a></li>
-              <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button"
-                  data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Beef</a></li>
-                  <li><a class="dropdown-item" href="#">Chicken</a></li>
-                  <li><a class="dropdown-item" href="#">Dessert</a></li>
-                  <li><a class="dropdown-item" href="#">Lamb</a></li>
-                  <li><a class="dropdown-item" href="#">Miscellaneous</a></li>
-                  <li><a class="dropdown-item" href="#">Pasta</a></li>
-                  <li><a class="dropdown-item" href="#">Pork</a></li>
-                  <li><a class="dropdown-item" href="#">Seafood</a></li>
-                  <li><a class="dropdown-item" href="#">Side</a></li>
-                  <li><a class="dropdown-item" href="#">Starter</a></li>
-                  <li><a class="dropdown-item" href="#">Vegan</a></li>
-                  <li><a class="dropdown-item" href="#">Vegetarian</a></li>
-                  <li><a class="dropdown-item" href="#">Breakfast</a></li>
-                  <li><a class="dropdown-item" href="#">Goat</a></li>
+            <div class="d-none d-lg-flex align-items-center">
+                <label class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
+                    <input type="checkbox" id="themeChecked">
+                    <div class="toggle-switch">
+                        <div class="toggle-circle"></div>
+                        <div class="icon moon">🌙</div>
+                        <div class="icon sun">🌞</div>
+                    </div>
+                </label>
+                <ul class="navbar-nav flex-grow-0 d-flex align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link randomRecipe" href="#" >Random</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Categories
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Beef</a></li>
+                            <li><a class="dropdown-item" href="#">Chicken</a></li>
+                            <li><a class="dropdown-item" href="#">Dessert</a></li>
+                            <li><a class="dropdown-item" href="#">Lamb</a></li>
+                            <li><a class="dropdown-item" href="#">Miscellaneous</a></li>
+                            <li><a class="dropdown-item" href="#">Pasta</a></li>
+                            <li><a class="dropdown-item" href="#">Pork</a></li>
+                            <li><a class="dropdown-item" href="#">Seafood</a></li>
+                            <li><a class="dropdown-item" href="#">Side</a></li>
+                            <li><a class="dropdown-item" href="#">Starter</a></li>
+                            <li><a class="dropdown-item" href="#">Vegan</a></li>
+                            <li><a class="dropdown-item" href="#">Vegetarian</a></li>
+                            <li><a class="dropdown-item" href="#">Breakfast</a></li>
+                            <li><a class="dropdown-item" href="#">Goat</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
                 </ul>
-              </li>
-            </ul>
-          </div>
+            </div>
+
+            <div class="offcanvas offcanvas-end d-lg-none" tabindex="-1" id="offcanvasNavbar"
+                 aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">🍔 SnackStack</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+                        <li class="nav-item"><a class="nav-link randomRecipe" href="#">RandomRecipe</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Beef</a></li>
+                                <li><a class="dropdown-item" href="#">Chicken</a></li>
+                                <li><a class="dropdown-item" href="#">Dessert</a></li>
+                                <li><a class="dropdown-item" href="#">Lamb</a></li>
+                                <li><a class="dropdown-item" href="#">Miscellaneous</a></li>
+                                <li><a class="dropdown-item" href="#">Pasta</a></li>
+                                <li><a class="dropdown-item" href="#">Pork</a></li>
+                                <li><a class="dropdown-item" href="#">Seafood</a></li>
+                                <li><a class="dropdown-item" href="#">Side</a></li>
+                                <li><a class="dropdown-item" href="#">Starter</a></li>
+                                <li><a class="dropdown-item" href="#">Vegan</a></li>
+                                <li><a class="dropdown-item" href="#">Vegetarian</a></li>
+                                <li><a class="dropdown-item" href="#">Breakfast</a></li>
+                                <li><a class="dropdown-item" href="#">Goat</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
-      </div>
     </nav>
 
-    <!-- Slide-Down Search Bar For Small -->
     <div id="mobileSearchBar" class="bg-body-tertiary d-lg-none p-2 shadow-sm">
         <div class="container-fluid">
             <form class="d-flex position-relative" role="search">
@@ -156,7 +149,6 @@
             style="display: none;">
       </div>
     </div>
-
 
     <main>
         <div id="recipeContainer" class="container">
