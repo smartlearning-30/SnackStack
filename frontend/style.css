@@ -93,6 +93,10 @@
 
 .pagination {
   gap: 6px;
+  flex-wrap: nowrap !important;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
 
 .pagination .page-link {
@@ -140,8 +144,12 @@ body.dark-mode .pagination .page-item.active .page-link {
   .pagination .page-link {
     padding: 4px 10px;
     font-size: 0.85rem;
+    min-width: 32px;
   }
 }
+
+
+
 
 /* Main Heading */
 .mainHeading {

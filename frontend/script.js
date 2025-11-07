@@ -61,7 +61,11 @@ if (e.key === 'Escape') {
 });
 
 document.querySelectorAll('.offcanvas .nav-link, .offcanvas .dropdown-item').forEach((link) => {
-  link.addEventListener('click', () => {
+  link.addEventListener('click', (e) => {
+    if (link.classList.contains('dropdown-toggle')) {
+      e.stopPropagation();
+      return;
+    }
     const offcanvasElement = document.querySelector('.offcanvas.show');
     if (offcanvasElement) {
       const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
@@ -127,9 +131,9 @@ window.addEventListener("load", () => {
     }
     for(let i=0;i<value;i++)
       {
-        fetch("https://www.themealdb.com/api/json/v1/1/random.php")
-        .then((response)=>response.json())
-        .then((data)=> appendcarddynamically(data.meals))
+        // fetch("https://www.themealdb.com/api/json/v1/1/random.php")
+        // .then((response)=>response.json())
+        // .then((data)=> appendcarddynamically(data.meals))
       }
 });
 
@@ -197,10 +201,9 @@ function renderResultsWithPagination(meals, page, itemsPerPage, resultsBox, onPa
   cardsContainer.className = "d-flex flex-row gap-3 overflow-auto p-2";
   cardsContainer.style.scrollBehavior = "smooth";
   cardsContainer.style.whiteSpace = "nowrap";
-  cardsContainer.style.scrollbarWidth = "thin"; 
+  cardsContainer.style.scrollbarWidth = "thin";
   cardsContainer.style.maxWidth = "100%";
   cardsContainer.style.overflowY = "hidden";
-
 
   paginatedMeals.forEach(meal => {
     cardsContainer.innerHTML += createRecipeCard(meal);
@@ -208,40 +211,83 @@ function renderResultsWithPagination(meals, page, itemsPerPage, resultsBox, onPa
 
   resultsBox.appendChild(cardsContainer);
 
-  // Add Bootstrap pagination at the bottom
+  // Add Bootstrap pagination (limited buttons)
   const totalPages = Math.ceil(meals.length / itemsPerPage);
   if (totalPages > 1) {
     const paginationWrapper = document.createElement("nav");
     paginationWrapper.setAttribute("aria-label", "Recipe Pagination");
+
     const paginationUl = document.createElement("ul");
-    paginationUl.className = "pagination justify-content-center flex-wrap mt-3";
+    paginationUl.className = "pagination justify-content-center flex-nowrap overflow-auto mt-3";
+    paginationUl.style.scrollbarWidth = "thin";
+    paginationUl.style.WebkitOverflowScrolling = "touch";
 
     // Previous button
     const prevLi = document.createElement("li");
     prevLi.className = "page-item" + (page === 1 ? " disabled" : "");
     prevLi.innerHTML = `<button class="page-link">Previous</button>`;
-    if (page > 1)
-      prevLi.querySelector("button").addEventListener("click", () => onPageClick(page - 1));
+    if (page > 1) prevLi.querySelector("button").addEventListener("click", () => onPageClick(page - 1));
     paginationUl.appendChild(prevLi);
-    // Page numbers
-    for (let i = 1; i <= totalPages; i++) {
+
+    // Limited pagination logic (Google-style)
+    const maxButtons = window.innerWidth < 768 ? 1 : 2; 
+    let startPage = Math.max(1, page - Math.floor(maxButtons / 2));
+    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+    if (endPage - startPage < maxButtons - 1) {
+      startPage = Math.max(1, endPage - maxButtons + 1);
+    }
+    if (page < startPage) startPage = page;
+    if (page > endPage) endPage = page;
+
+    // Show first page + leading dots if needed
+    if (startPage > 1) {
+      const firstLi = document.createElement("li");
+      firstLi.className = "page-item";
+      firstLi.innerHTML = `<button class="page-link">1</button>`;
+      firstLi.querySelector("button").addEventListener("click", () => onPageClick(1));
+      paginationUl.appendChild(firstLi);
+
+      const dotsLi = document.createElement("li");
+      dotsLi.className = "page-item disabled";
+      dotsLi.innerHTML = `<span class="page-link">...</span>`;
+      paginationUl.appendChild(dotsLi);
+    }
+
+    // Visible page numbers
+    for (let i = startPage; i <= endPage; i++) {
       const li = document.createElement("li");
       li.className = "page-item" + (i === page ? " active" : "");
       li.innerHTML = `<button class="page-link">${i}</button>`;
       li.querySelector("button").addEventListener("click", () => onPageClick(i));
       paginationUl.appendChild(li);
     }
+
+    // Show trailing dots + last page if needed
+    if (endPage < totalPages) {
+      const dotsLi = document.createElement("li");
+      dotsLi.className = "page-item disabled";
+      dotsLi.innerHTML = `<span class="page-link">...</span>`;
+      paginationUl.appendChild(dotsLi);
+
+      const lastLi = document.createElement("li");
+      lastLi.className = "page-item";
+      lastLi.innerHTML = `<button class="page-link">${totalPages}</button>`;
+      lastLi.querySelector("button").addEventListener("click", () => onPageClick(totalPages));
+      paginationUl.appendChild(lastLi);
+    }
+
     // Next button
     const nextLi = document.createElement("li");
     nextLi.className = "page-item" + (page === totalPages ? " disabled" : "");
     nextLi.innerHTML = `<button class="page-link">Next</button>`;
-    if (page < totalPages)
-      nextLi.querySelector("button").addEventListener("click", () => onPageClick(page + 1));
+    if (page < totalPages) nextLi.querySelector("button").addEventListener("click", () => onPageClick(page + 1));
     paginationUl.appendChild(nextLi);
+
     paginationWrapper.appendChild(paginationUl);
     resultsBox.appendChild(paginationWrapper);
   }
 }
+
 
 
 // Items Per Page
