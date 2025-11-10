@@ -1,38 +1,42 @@
 (() => {
 // MOBILE NAVBAR HANDLER
-const searchToggle = document.getElementById('searchToggle');
-const mobileSearchBar = document.getElementById('mobileSearchBar');
-const searchBoxMobile = document.getElementById('searchBoxMobile');
-const resultsBoxMobile = document.getElementById('resultsBoxMobile'); 
+const searchToggle = document.getElementById("searchToggle");
+const mobileSearchBar = document.getElementById("mobileSearchBar");
+const searchBoxMobile = document.getElementById("searchBoxMobile");
+const navbarToggler = document.querySelector(".navbar-toggler");
 
-searchToggle.addEventListener('click', () => {
-  const willShow = !mobileSearchBar.classList.contains('show');
-  mobileSearchBar.classList.toggle('show', willShow);
-  searchToggle.setAttribute('aria-expanded', String(willShow));
+navbarToggler.addEventListener("click", () => {
+  mobileSearchBar.classList.remove("show");
+  mobileSearchBar.style.display = "none";
+});
 
-  if (!willShow) {
-    resultsBoxMobile.style.display = 'none'; 
-  }
+searchToggle.addEventListener("click", () => {
+  const willShow = !mobileSearchBar.classList.contains("show");
+
+  mobileSearchBar.classList.toggle("show", willShow);
+  searchToggle.setAttribute("aria-expanded", String(willShow));
+  mobileSearchBar.style.display = willShow ? "block" : "none";
+
   if (willShow && searchBoxMobile) {
     requestAnimationFrame(() => searchBoxMobile.focus());
   }
 });
 
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    mobileSearchBar.classList.remove('show');
-    searchToggle.setAttribute('aria-expanded', 'false');
-    resultsBoxMobile.style.display = 'none'; 
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    mobileSearchBar.classList.remove("show");
+    mobileSearchBar.style.display = "none";
+    searchToggle.setAttribute("aria-expanded", "false");
   }
 });
 
-document.querySelectorAll('.offcanvas .nav-link, .offcanvas .dropdown-item').forEach((link) => {
-  link.addEventListener('click', (e) => {
-    if (link.classList.contains('dropdown-toggle')) {
+document.querySelectorAll(".offcanvas .nav-link, .offcanvas .dropdown-item").forEach(link => {
+  link.addEventListener("click", e => {
+    if (link.classList.contains("dropdown-toggle")) {
       e.stopPropagation();
       return;
     }
-    const offcanvasElement = document.querySelector('.offcanvas.show');
+    const offcanvasElement = document.querySelector(".offcanvas.show");
     if (offcanvasElement) {
       const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
       offcanvas.hide();
@@ -55,14 +59,38 @@ async function loadCategoryRecipes(category) {
   try {
     const container = document.getElementById("recipeContainer");
     container.innerHTML = `<h2 class="text-center mt-4">${category} Recipes</h2>`;
+    const skeletonContainer = document.createElement("div");
+    skeletonContainer.className = "d-flex flex-wrap justify-content-center gap-3 mt-4";
 
+    for (let i = 0; i < 8; i++) {
+      skeletonContainer.innerHTML += `
+        <div class="card shadow-sm border-0 placeholder-glow" style="width: 16rem;" aria-hidden="true">
+          <div class="bg-secondary placeholder col-12 mb-2" style="height:180px; border-radius:12px;"></div>
+          <div class="card-body text-center">
+            <h5 class="card-title placeholder-glow mb-2">
+              <span class="placeholder col-8"></span>
+            </h5>
+            <p class="card-text placeholder-glow mb-3">
+              <span class="placeholder col-6"></span>
+            </p>
+            <a class="btn btn-warning disabled placeholder col-6"></a>
+          </div>
+        </div>
+      `;
+    }
+
+    container.appendChild(skeletonContainer);
     const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`);
     const data = await response.json();
 
     if (!data.meals) {
-      container.innerHTML += `<p class="text-center text-muted mt-3">No recipes found for ${category}.</p>`;
+      container.innerHTML = `
+        <h2 class="text-center mt-4">${category} Recipes</h2>
+        <p class="text-center text-muted mt-3">No recipes found for ${category}.</p>
+      `;
       return;
     }
+    container.innerHTML = `<h2 class="text-center mt-4">${category} Recipes</h2>`;
 
     const meals = data.meals;
     let isSmallScreen = window.innerWidth < 1200;
@@ -74,7 +102,6 @@ async function loadCategoryRecipes(category) {
       grid.className = "d-flex flex-wrap justify-content-center gap-3 mt-4";
 
       if (!isSmallScreen) {
-        //Large screen - show all
         meals.forEach(meal => {
           grid.innerHTML += `
             <div class="card" style="width: 18rem; cursor:pointer;" onclick="window.location.href='recipe.html?id=${meal.idMeal}'">
@@ -107,7 +134,6 @@ async function loadCategoryRecipes(category) {
 
       container.appendChild(grid);
 
-      // Load Next / Previous setup
       const totalPages = Math.ceil(meals.length / itemsPerPage);
       if (totalPages > 1) {
         const navDiv = document.createElement("div");
@@ -134,11 +160,11 @@ async function loadCategoryRecipes(category) {
         navDiv.appendChild(nextBtn);
         container.appendChild(navDiv);
       }
-      window.scrollTo({ top: 0, behavior: "smooth" });
 
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
+
     renderPage(currentPage);
-    // 🌀 Auto toggle pagination when resizing
     let resizeTimeout;
     window.addEventListener("resize", () => {
       clearTimeout(resizeTimeout);
@@ -156,4 +182,5 @@ async function loadCategoryRecipes(category) {
     console.error("Error loading category recipes:", err);
   }
 }
+
 })();

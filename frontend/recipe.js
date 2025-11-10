@@ -281,118 +281,97 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+// RANDOM RECIPE BUTTON
+const randomRecipe = document.querySelectorAll(".randomRecipe");
+
+const randomLoader = document.createElement("div");
+randomLoader.id = "randomLoaderOverlay";
+randomLoader.innerHTML = `
+  <div class="loader-overlay-content">
+    <div class="spinner-border text-warning" style="width: 4rem; height: 4rem;" role="status"></div>
+    <h5 class="mt-3 text-light fw-semibold">Fetching a Random Recipe...</h5>
+  </div>
+`;
+document.body.appendChild(randomLoader);
+
+randomRecipe.forEach(link => {
+  link.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    randomLoader.classList.add("show");
+    document.body.style.overflow = "hidden";
+
+    fetch("https://www.themealdb.com/api/json/v1/1/random.php")
+      .then(response => response.json())
+      .then(data => {
+        let randomvalue = data.meals[0].idMeal;
+        setTimeout(() => {
+          randomLoader.classList.remove("show");
+          document.body.style.overflow = "auto";
+          window.location.href = `recipe.html?id=${randomvalue}`;
+        }, 1200);
+      })
+      .catch(error => {
+        console.error("Error fetching random recipe:", error);
+        toastmessage.textContent = "❌ Failed to load random recipe.";
+        toast.show();
+        randomLoader.classList.remove("show");
+        document.body.style.overflow = "auto";
+      });
+  });
+});
 
 
+
+// TOAST MESSAGE
 const inputs = document.querySelectorAll(".searchInput");
 const buttons = document.querySelectorAll(".searchbtn");
 
-let toastmessage=document.getElementById("toast-message");
-const toastEl = document.getElementById('myToast');
-const toast = new bootstrap.Toast(toastEl, { delay: 3000 }); 
+let toastmessage = document.getElementById("toast-message");
+const toastEl = document.getElementById("myToast");
+const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
 
+// FULLSCREEN SEARCH 
+const searchOverlay = document.getElementById("searchOverlay");
+const searchResultsContainer = document.getElementById("searchResultsContainer");
+const overlayClose = document.querySelector(".overlay-close");
 
-//Pagination Recipe Items
-function createRecipeCard(meal) {
-  return `
-    <div class="card mb-3" style="width: 18rem;">
-      <img src="${meal.strMealThumb}" class="card-img-top" alt="${meal.strMeal}">
-      <div class="card-body">
-        <h5 class="card-title">${meal.strMeal}</h5>
-        <p class="card-text">${meal.strArea} | ${meal.strCategory}</p>
-        <a href="recipe.html?id=${meal.idMeal}" class="btn btn-primary">View Recipe</a>
+function showSearchResults(meals) {
+  searchResultsContainer.innerHTML = "";
+  meals.forEach(meal => {
+    const card = `
+      <div class="card bg-body text-center border-0 shadow-sm" style="border-radius: 12px;">
+        <img src="${meal.strMealThumb}" alt="${meal.strMeal}" class="w-100" style="height: 180px; object-fit: cover; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+        <div class="card-body">
+          <h5 class="card-title fw-semibold">${meal.strMeal}</h5>
+          <p class="text-muted small mb-2">${meal.strArea} | ${meal.strCategory}</p>
+          <a href="recipe.html?id=${meal.idMeal}" class="btn btn-warning btn-sm">View</a>
+        </div>
       </div>
-    </div>
-  `;
+    `;
+    searchResultsContainer.innerHTML += card;
+  });
+  searchOverlay.classList.add("show");
+  document.body.style.overflow = "hidden";
 }
 
-// Render both results & pagination inside one box
-function renderResultsWithPagination(meals, page, itemsPerPage, resultsBox, onPageClick) {
-  resultsBox.style.display = "block";
-  resultsBox.innerHTML = ""; 
+// Close overlay
+overlayClose.addEventListener("click", () => {
+  searchOverlay.classList.remove("show");
+  document.body.style.overflow = "auto";
+});
 
-  const closeBtn = document.createElement("button");
-  closeBtn.type = "button";
-  closeBtn.style.cssText = "margin-left: 17px; margin-top: 3px;";
-  closeBtn.className = "btn-close position-absolute top-0 end-0";
-  closeBtn.setAttribute("aria-label", "Close");
-
-  closeBtn.addEventListener("click", () => {
-    resultsBox.style.display = "none";
-  });
-
-  resultsBox.appendChild(closeBtn);
-
-  const start = (page - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
-  const paginatedMeals = meals.slice(start, end);
-
-  // Create a grid container for recipe cards
-  const cardsContainer = document.createElement("div");
-  cardsContainer.className = "d-flex flex-row gap-3 overflow-auto p-2";
-  cardsContainer.style.scrollBehavior = "smooth";
-  cardsContainer.style.whiteSpace = "nowrap";
-  cardsContainer.style.scrollbarWidth = "thin";
-  cardsContainer.style.maxWidth = "100%";
-  cardsContainer.style.overflowY = "hidden";
-
-  paginatedMeals.forEach(meal => {
-    cardsContainer.innerHTML += createRecipeCard(meal);
-  });
-
-  resultsBox.appendChild(cardsContainer);
-
-  // Add Load Previous / Next Buttons 
-  const totalPages = Math.ceil(meals.length / itemsPerPage);
-  if (totalPages > 1) {
-    const navDiv = document.createElement("div");
-    navDiv.className = "d-flex justify-content-center align-items-center gap-3 mt-3 flex-wrap";
-
-    const prevBtn = document.createElement("button");
-    prevBtn.className = "btn btn-outline-warning";
-    prevBtn.textContent = "⬅️ Previous";
-    prevBtn.disabled = page === 1;
-    prevBtn.addEventListener("click", () => onPageClick(page - 1));
-
-    const info = document.createElement("span");
-    info.className = "text-muted small fw-semibold";
-    info.textContent = `Page ${page} of ${totalPages}`;
-
-    const nextBtn = document.createElement("button");
-    nextBtn.className = "btn btn-warning";
-    nextBtn.textContent = "Next ➡️";
-    nextBtn.disabled = page === totalPages;
-    nextBtn.addEventListener("click", () => onPageClick(page + 1));
-
-    navDiv.appendChild(prevBtn);
-    navDiv.appendChild(info);
-    navDiv.appendChild(nextBtn);
-    resultsBox.appendChild(navDiv);
+// ESC key close
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    searchOverlay.classList.remove("show");
+    document.body.style.overflow = "auto";
   }
-}
+});
 
-
-
-// Items Per Page
-function getItemsPerPage() {
-  const w = window.innerWidth;
-  if (w > 1200) return 4;      
-  if (w >= 992) return 3;    
-  return 2;                   
-}
-
-
-function debounce(fn, delay = 150) {
-  let t;
-  return (...args) => {
-    clearTimeout(t);
-    t = setTimeout(() => fn(...args), delay);
-  };
-}
-
-
-// SEARCH FUNCTION 
+// SEARCH FUNCTION
 buttons.forEach((btn, index) => {
-  btn.addEventListener("click", async (event) => {
+  btn.addEventListener("click", async event => {
     event.preventDefault();
     const inputval = inputs[index].value.trim();
 
@@ -405,65 +384,65 @@ buttons.forEach((btn, index) => {
       if (spinner) spinner.classList.remove("d-none");
 
       try {
+        searchResultsContainer.innerHTML = `
+          ${Array.from({ length: 8 })
+            .map(
+              () => `
+                <div class="card shadow-sm border-0 placeholder-glow" aria-hidden="true">
+                  <div class="bg-secondary placeholder col-12 mb-2" style="height:180px; border-radius:12px;"></div>
+                  <div class="card-body text-center">
+                    <h5 class="card-title placeholder-glow mb-2">
+                      <span class="placeholder col-8"></span>
+                    </h5>
+                    <p class="card-text placeholder-glow mb-3">
+                      <span class="placeholder col-6"></span>
+                    </p>
+                    <a class="btn btn-warning disabled placeholder col-6"></a>
+                  </div>
+                </div>
+              `
+            )
+            .join("")}
+        `;
+        searchOverlay.classList.add("show");
+        document.body.style.overflow = "hidden";
+
+
         const response = await fetch("https://www.themealdb.com/api/json/v1/1/search.php?s=" + inputval);
         const data = await response.json();
+
         if (!data.meals) {
           toastmessage.textContent = "No recipes found for " + inputval;
           toast.show();
+          searchOverlay.classList.remove("show");
+          document.body.style.overflow = "auto";
         } else {
-          const meals = data.meals;
-          
-          let currentPage = 1;
-          const resultsBoxDesktop = document.getElementById("resultsBoxDesktop");
-          const resultsBoxMobile = document.getElementById("resultsBoxMobile");
+          showSearchResults(data.meals);
 
-            function updatePage(page) {
-              currentPage = page;
-              itemsPerPage = getItemsPerPage();
-              renderResultsWithPagination(meals, currentPage, itemsPerPage, resultsBoxDesktop, updatePage);
-              renderResultsWithPagination(meals, currentPage, itemsPerPage, resultsBoxMobile, updatePage);
-              window.scrollTo({ top: 0, behavior: "smooth" }); 
-          }
-         updatePage(currentPage);
 
-         // Items Per Page Handler
-         window.addEventListener("resize", debounce(() => {
-            const newItems = getItemsPerPage();
-            if (newItems !== itemsPerPage) {
-              itemsPerPage = newItems;
-              updatePage(1);
-            }
-          }, 150));
+          setTimeout(() => {
+            document.querySelectorAll(".card").forEach(card =>
+              card.classList.add("fade", "show")
+            );
+          }, 50);
         }
       } catch (error) {
         console.error("Error fetching recipe:", error);
+        toastmessage.textContent = "❌ Failed to load recipes.";
+        toast.show();
       } finally {
         if (spinner) spinner.classList.add("d-none");
         if (buttonText) buttonText.textContent = "Search";
         btn.disabled = false;
       }
     } else {
-      inputs[index].value = "";
-      toastmessage.textContent = "Please Enter the Recipe Name";
+      toastmessage.textContent = "Please enter a recipe name!";
       toast.show();
     }
   });
 });
 
-//Result Modal Close Button
-const closeBtnDesktop = document.getElementById("closeResultsDesktop");
-const resultsBoxDesktop = document.getElementById("resultsBoxDesktop");
-
-if (closeBtnDesktop && resultsBoxDesktop) {
-  closeBtnDesktop.addEventListener("click", () => {
-    resultsBoxDesktop.style.display = "none";
-  });
-}
-
-
-
 // Dropdown Categories handler
-
 document.addEventListener("DOMContentLoaded", () => {
   const categoryLinks = document.querySelectorAll(".dropdown-menu .dropdown-item");
 

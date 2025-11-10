@@ -1,22 +1,22 @@
+// THEME TOGGLE HANDLER
 const themeRoot = document.getElementById("themeRoot");
 const themeToggles = [
   document.getElementById("themeChecked"),
   document.getElementById("themeCheckedSmall")
 ];
 
-
 const savedTheme = localStorage.getItem("theme");
 if (savedTheme) {
   themeRoot.setAttribute("data-bs-theme", savedTheme);
   if (savedTheme === "dark") document.body.classList.add("dark-mode");
   const isDark = savedTheme === "dark";
-  themeToggles.forEach(toggle => toggle.checked = isDark);
+  themeToggles.forEach(toggle => (toggle.checked = isDark));
 } else {
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
   if (prefersDark) {
     document.body.classList.add("dark-mode");
     themeRoot.setAttribute("data-bs-theme", "dark");
-    themeToggles.forEach(toggle => toggle.checked = true);
+    themeToggles.forEach(toggle => (toggle.checked = true));
   }
 }
 
@@ -32,50 +32,46 @@ themeToggles.forEach(toggle => {
   });
 });
 
-// MOBILE NAVBAR HANDLER
-const searchToggle = document.getElementById('searchToggle');
-const mobileSearchBar = document.getElementById('mobileSearchBar');
-const searchBoxMobile = document.getElementById('searchBoxMobile');
-const resultsBoxMobile = document.getElementById('resultsBoxMobile'); 
-const navbarToggler = document.querySelector('.navbar-toggler');
 
-navbarToggler.addEventListener('click', () => {
-  mobileSearchBar.classList.remove('show');
-  mobileSearchBar.style.display = 'none';
-  resultsBoxMobile.style.display = 'none';
+// MOBILE NAVBAR HANDLER
+
+const searchToggle = document.getElementById("searchToggle");
+const mobileSearchBar = document.getElementById("mobileSearchBar");
+const searchBoxMobile = document.getElementById("searchBoxMobile");
+const navbarToggler = document.querySelector(".navbar-toggler");
+
+navbarToggler.addEventListener("click", () => {
+  mobileSearchBar.classList.remove("show");
+  mobileSearchBar.style.display = "none";
 });
 
-searchToggle.addEventListener('click', () => {
-  const willShow = !mobileSearchBar.classList.contains('show');
+searchToggle.addEventListener("click", () => {
+  const willShow = !mobileSearchBar.classList.contains("show");
 
-  mobileSearchBar.classList.toggle('show', willShow);
-  searchToggle.setAttribute('aria-expanded', String(willShow));
+  mobileSearchBar.classList.toggle("show", willShow);
+  searchToggle.setAttribute("aria-expanded", String(willShow));
+  mobileSearchBar.style.display = willShow ? "block" : "none";
 
-  mobileSearchBar.style.display = willShow ? 'block' : 'none';
-  if (!willShow) {
-    resultsBoxMobile.style.display = 'none'; 
-  }
   if (willShow && searchBoxMobile) {
     requestAnimationFrame(() => searchBoxMobile.focus());
   }
 });
 
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    mobileSearchBar.classList.remove('show');
-    mobileSearchBar.style.display = 'none';
-    searchToggle.setAttribute('aria-expanded', 'false');
-    resultsBoxMobile.style.display = 'none'; 
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    mobileSearchBar.classList.remove("show");
+    mobileSearchBar.style.display = "none";
+    searchToggle.setAttribute("aria-expanded", "false");
   }
 });
 
-document.querySelectorAll('.offcanvas .nav-link, .offcanvas .dropdown-item').forEach((link) => {
-  link.addEventListener('click', (e) => {
-    if (link.classList.contains('dropdown-toggle')) {
+document.querySelectorAll(".offcanvas .nav-link, .offcanvas .dropdown-item").forEach(link => {
+  link.addEventListener("click", e => {
+    if (link.classList.contains("dropdown-toggle")) {
       e.stopPropagation();
       return;
     }
-    const offcanvasElement = document.querySelector('.offcanvas.show');
+    const offcanvasElement = document.querySelector(".offcanvas.show");
     if (offcanvasElement) {
       const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
       offcanvas.hide();
@@ -83,192 +79,224 @@ document.querySelectorAll('.offcanvas .nav-link, .offcanvas .dropdown-item').for
   });
 });
 
-// Card Append Dynamically
-let cardappend=document.getElementById("cardAppend");
+// CARD APPEND DYNAMICALLY
+let cardappend = document.getElementById("cardAppend");
 
-function appendcarddynamically(recipevalue){
-    let divelement=document.createElement("div");
-    divelement.classList.add("col-12","col-md-6","col-lg-3");
-    let divelement2=document.createElement("div");
-    divelement2.classList.add("shadow","p-3","mb-4","recipe-item-card");
-    let imgelement=document.createElement("img");
-    imgelement.src=recipevalue[0].strMealThumb;
-    imgelement.classList.add("w-100","recipe-item-image");
-    let h1element=document.createElement("h1");
-    h1element.textContent=recipevalue[0].strMeal;
-    h1element.className="recipe-card-title";
-    const aelement = document.createElement("a");
-    aelement.href = "";
-    aelement.className = "recipe-item-link";
-    aelement.id= recipevalue[0].idMeal;
-    aelement.innerHTML = `
+function appendcarddynamically(recipevalue) {
+  let divelement = document.createElement("div");
+  divelement.classList.add("col-12", "col-md-6", "col-lg-3");
+
+  let divelement2 = document.createElement("div");
+  divelement2.classList.add("shadow", "p-3", "mb-4", "recipe-item-card");
+
+  let imgelement = document.createElement("img");
+  imgelement.src = recipevalue[0].strMealThumb;
+  imgelement.classList.add("w-100", "recipe-item-image");
+  imgelement.loading = "lazy";
+
+  imgelement.style.opacity = "0";
+  imgelement.style.background =
+    "linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%)";
+  imgelement.style.backgroundSize = "200% 100%";
+  imgelement.style.animation = "shimmer 1.5s infinite";
+
+  imgelement.addEventListener("load", () => {
+    imgelement.style.animation = "none";
+    imgelement.style.background = "none";
+    imgelement.style.opacity = "1";
+    imgelement.style.transition = "opacity 0.4s ease";
+  });
+
+  let h1element = document.createElement("h1");
+  h1element.textContent = recipevalue[0].strMeal;
+  h1element.className = "recipe-card-title";
+
+  const aelement = document.createElement("a");
+  aelement.href = "";
+  aelement.className = "recipe-item-link";
+  aelement.id = recipevalue[0].idMeal;
+  aelement.innerHTML = `
     View Recipe
     <svg width="16px" height="16px" viewBox="0 0 16 16" class="bi bi-arrow-right-short" fill="#d0b200" xmlns="http://www.w3.org/2000/svg">
-        <path
+      <path
         fill-rule="evenodd"
         d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"
-        />
+      />
     </svg>
-    `;
-   
-    cardappend.appendChild(divelement);
-    divelement.appendChild(divelement2);
-    divelement2.appendChild(imgelement);
-    divelement2.appendChild(h1element);
-    divelement2.appendChild(aelement);
+  `;
 
-    aelement.addEventListener("click",function(event){
-      event.preventDefault();
-      window.location.href = `recipe.html?id=${this.id}`;
-    });
+  cardappend.appendChild(divelement);
+  divelement.appendChild(divelement2);
+  divelement2.appendChild(imgelement);
+  divelement2.appendChild(h1element);
+  divelement2.appendChild(aelement);
+
+  aelement.addEventListener("click", function (event) {
+    event.preventDefault();
+    window.location.href = `recipe.html?id=${this.id}`;
+  });
 }
 
 
-let value; 
-window.addEventListener("load", () => {
-    let viewportWidth = window.innerWidth;
-    console.log(window.innerWidth);
-    if (viewportWidth >1200) {
-        value = 12;
-    } else if (viewportWidth >= 992) {
-        value = 8;
-    } else {
-        value = 4;
-    }
-    for(let i=0;i<value;i++)
-      {
-        fetch("https://www.themealdb.com/api/json/v1/1/random.php")
-        .then((response)=>response.json())
-        .then((data)=> appendcarddynamically(data.meals))
-      }
+// RECIPE CARDS 
+let value;
+window.addEventListener("load", async () => {
+  let viewportWidth = window.innerWidth;
+  if (viewportWidth > 1200) value = 12;
+  else if (viewportWidth >= 992) value = 8;
+  else value = 4;
+
+
+  cardappend.innerHTML = `
+    <div class="col-12">
+      <h1 class="mainHeading">RECIPES</h1>
+    </div>
+  `;
+  for (let i = 0; i < value; i++) {
+    const skeleton = document.createElement("div");
+    skeleton.className = "col-12 col-md-6 col-lg-3";
+    skeleton.innerHTML = `
+      <div class="card shadow p-3 mb-4" aria-hidden="true">
+        <div class="placeholder-glow">
+          <div class="card-img-top bg-secondary placeholder col-12 mb-2" style="height:180px;"></div>
+          <h5 class="card-title placeholder-glow">
+            <span class="placeholder col-8"></span>
+          </h5>
+          <p class="card-text placeholder-glow">
+            <span class="placeholder col-6"></span>
+          </p>
+          <a class="btn btn-warning disabled placeholder col-6"></a>
+        </div>
+      </div>
+    `;
+    cardappend.appendChild(skeleton);
+  }
+
+  try {
+
+    const requests = Array.from({ length: value }, () =>
+      fetch("https://www.themealdb.com/api/json/v1/1/random.php").then(res => res.json())
+    );
+
+    const results = await Promise.all(requests);
+    const allMeals = results.map(r => r.meals);
+
+
+    cardappend.innerHTML = `
+      <div class="col-12">
+        <h1 class="mainHeading">RECIPES</h1>
+      </div>
+    `;
+
+    allMeals.forEach(meal => appendcarddynamically(meal));
+
+    setTimeout(() => {
+      document.querySelectorAll(".recipe-item-card").forEach(card =>
+        card.classList.add("fade", "show")
+      );
+    }, 50);
+  } catch (error) {
+    console.error("Error fetching meals:", error);
+    cardappend.innerHTML = `
+      <div class="col-12 text-center py-5 text-danger fw-bold">
+        ⚠️ Failed to load recipes. Please try again later.
+      </div>`;
+  }
 });
 
 
-const randomRecipe = document.querySelectorAll(".randomRecipe"); 
+// RANDOM RECIPE BUTTON
+const randomRecipe = document.querySelectorAll(".randomRecipe");
+
+const randomLoader = document.createElement("div");
+randomLoader.id = "randomLoaderOverlay";
+randomLoader.innerHTML = `
+  <div class="loader-overlay-content">
+    <div class="spinner-border text-warning" style="width: 4rem; height: 4rem;" role="status"></div>
+    <h5 class="mt-3 text-light fw-semibold">Fetching a Random Recipe...</h5>
+  </div>
+`;
+document.body.appendChild(randomLoader);
 
 randomRecipe.forEach(link => {
-    link.addEventListener("click", function(event) {
-    event.preventDefault(); 
+  link.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    randomLoader.classList.add("show");
+    document.body.style.overflow = "hidden";
+
     fetch("https://www.themealdb.com/api/json/v1/1/random.php")
-        .then(response => response.json())
-        .then(data => {
-            let randomvalue = data.meals[0].idMeal;
-            window.location.href = `recipe.html?id=${randomvalue}`;
-        });
-    });
+      .then(response => response.json())
+      .then(data => {
+        let randomvalue = data.meals[0].idMeal;
+        setTimeout(() => {
+          randomLoader.classList.remove("show");
+          document.body.style.overflow = "auto";
+          window.location.href = `recipe.html?id=${randomvalue}`;
+        }, 1200);
+      })
+      .catch(error => {
+        console.error("Error fetching random recipe:", error);
+        toastmessage.textContent = "❌ Failed to load random recipe.";
+        toast.show();
+        randomLoader.classList.remove("show");
+        document.body.style.overflow = "auto";
+      });
+  });
 });
 
 
+
+// TOAST MESSAGE
 const inputs = document.querySelectorAll(".searchInput");
 const buttons = document.querySelectorAll(".searchbtn");
 
-let toastmessage=document.getElementById("toast-message");
-const toastEl = document.getElementById('myToast');
-const toast = new bootstrap.Toast(toastEl, { delay: 3000 }); 
+let toastmessage = document.getElementById("toast-message");
+const toastEl = document.getElementById("myToast");
+const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
 
 
-//Pagination Recipe Items
-function createRecipeCard(meal) {
-  return `
-    <div class="card mb-3" style="width: 18rem;">
-      <img src="${meal.strMealThumb}" class="card-img-top" alt="${meal.strMeal}">
-      <div class="card-body">
-        <h5 class="card-title">${meal.strMeal}</h5>
-        <p class="card-text">${meal.strArea} | ${meal.strCategory}</p>
-        <a href="recipe.html?id=${meal.idMeal}" class="btn btn-primary">View Recipe</a>
+// FULLSCREEN SEARCH OVERLAY
+const searchOverlay = document.getElementById("searchOverlay");
+const searchResultsContainer = document.getElementById("searchResultsContainer");
+const overlayClose = document.querySelector(".overlay-close");
+
+function showSearchResults(meals) {
+  searchResultsContainer.innerHTML = "";
+  meals.forEach(meal => {
+    const card = `
+      <div class="card bg-body text-center border-0 shadow-sm" style="border-radius: 12px;">
+        <img src="${meal.strMealThumb}" alt="${meal.strMeal}" class="w-100" style="height: 180px; object-fit: cover; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+        <div class="card-body">
+          <h5 class="card-title fw-semibold">${meal.strMeal}</h5>
+          <p class="text-muted small mb-2">${meal.strArea} | ${meal.strCategory}</p>
+          <a href="recipe.html?id=${meal.idMeal}" class="btn btn-warning btn-sm">View</a>
+        </div>
       </div>
-    </div>
-  `;
+    `;
+    searchResultsContainer.innerHTML += card;
+  });
+  searchOverlay.classList.add("show");
+  document.body.style.overflow = "hidden";
 }
 
-// Render both results & pagination inside one box
-function renderResultsWithPagination(meals, page, itemsPerPage, resultsBox, onPageClick) {
-  resultsBox.style.display = "block";
-  resultsBox.innerHTML = ""; 
+// Close overlay
+overlayClose.addEventListener("click", () => {
+  searchOverlay.classList.remove("show");
+  document.body.style.overflow = "auto";
+});
 
-  const closeBtn = document.createElement("button");
-  closeBtn.type = "button";
-  closeBtn.style.cssText = "margin-left: 17px; margin-top: 3px;";
-  closeBtn.className = "btn-close position-absolute top-0 end-0";
-  closeBtn.setAttribute("aria-label", "Close");
-
-  closeBtn.addEventListener("click", () => {
-    resultsBox.style.display = "none";
-  });
-
-  resultsBox.appendChild(closeBtn);
-
-  const start = (page - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
-  const paginatedMeals = meals.slice(start, end);
-
-  // Create a grid container for recipe cards
-  const cardsContainer = document.createElement("div");
-  cardsContainer.className = "d-flex flex-row gap-3 overflow-auto p-2";
-  cardsContainer.style.scrollBehavior = "smooth";
-  cardsContainer.style.whiteSpace = "nowrap";
-  cardsContainer.style.scrollbarWidth = "thin";
-  cardsContainer.style.maxWidth = "100%";
-  cardsContainer.style.overflowY = "hidden";
-
-  paginatedMeals.forEach(meal => {
-    cardsContainer.innerHTML += createRecipeCard(meal);
-  });
-
-  resultsBox.appendChild(cardsContainer);
-
-  // Add Load Previous / Next Buttons 
-  const totalPages = Math.ceil(meals.length / itemsPerPage);
-  if (totalPages > 1) {
-    const navDiv = document.createElement("div");
-    navDiv.className = "d-flex justify-content-center align-items-center gap-3 mt-3 flex-wrap";
-
-    const prevBtn = document.createElement("button");
-    prevBtn.className = "btn btn-outline-warning";
-    prevBtn.textContent = "⬅️ Previous";
-    prevBtn.disabled = page === 1;
-    prevBtn.addEventListener("click", () => onPageClick(page - 1));
-
-    const info = document.createElement("span");
-    info.className = "text-muted small fw-semibold";
-    info.textContent = `Page ${page} of ${totalPages}`;
-
-    const nextBtn = document.createElement("button");
-    nextBtn.className = "btn btn-warning";
-    nextBtn.textContent = "Next ➡️";
-    nextBtn.disabled = page === totalPages;
-    nextBtn.addEventListener("click", () => onPageClick(page + 1));
-
-    navDiv.appendChild(prevBtn);
-    navDiv.appendChild(info);
-    navDiv.appendChild(nextBtn);
-    resultsBox.appendChild(navDiv);
+// ESC key close
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    searchOverlay.classList.remove("show");
+    document.body.style.overflow = "auto";
   }
-}
+});
 
-
-
-// Items Per Page
-function getItemsPerPage() {
-  const w = window.innerWidth;
-  if (w > 1200) return 4;      
-  if (w >= 992) return 3;    
-  return 2;                   
-}
-
-
-function debounce(fn, delay = 150) {
-  let t;
-  return (...args) => {
-    clearTimeout(t);
-    t = setTimeout(() => fn(...args), delay);
-  };
-}
-
-
-// SEARCH FUNCTION 
+// SEARCH FUNCTION
 buttons.forEach((btn, index) => {
-  btn.addEventListener("click", async (event) => {
+  btn.addEventListener("click", async event => {
     event.preventDefault();
     const inputval = inputs[index].value.trim();
 
@@ -281,106 +309,106 @@ buttons.forEach((btn, index) => {
       if (spinner) spinner.classList.remove("d-none");
 
       try {
+        searchResultsContainer.innerHTML = `
+          ${Array.from({ length: 8 })
+            .map(
+              () => `
+                <div class="card shadow-sm border-0 placeholder-glow" aria-hidden="true">
+                  <div class="bg-secondary placeholder col-12 mb-2" style="height:180px; border-radius:12px;"></div>
+                  <div class="card-body text-center">
+                    <h5 class="card-title placeholder-glow mb-2">
+                      <span class="placeholder col-8"></span>
+                    </h5>
+                    <p class="card-text placeholder-glow mb-3">
+                      <span class="placeholder col-6"></span>
+                    </p>
+                    <a class="btn btn-warning disabled placeholder col-6"></a>
+                  </div>
+                </div>
+              `
+            )
+            .join("")}
+        `;
+        searchOverlay.classList.add("show");
+        document.body.style.overflow = "hidden";
+
+
         const response = await fetch("https://www.themealdb.com/api/json/v1/1/search.php?s=" + inputval);
         const data = await response.json();
+
         if (!data.meals) {
           toastmessage.textContent = "No recipes found for " + inputval;
           toast.show();
+          searchOverlay.classList.remove("show");
+          document.body.style.overflow = "auto";
         } else {
-          const meals = data.meals;
-          
-          let currentPage = 1;
-          const resultsBoxDesktop = document.getElementById("resultsBoxDesktop");
-          const resultsBoxMobile = document.getElementById("resultsBoxMobile");
+          showSearchResults(data.meals);
 
-            function updatePage(page) {
-              currentPage = page;
-              itemsPerPage = getItemsPerPage();
-              renderResultsWithPagination(meals, currentPage, itemsPerPage, resultsBoxDesktop, updatePage);
-              renderResultsWithPagination(meals, currentPage, itemsPerPage, resultsBoxMobile, updatePage);
-              window.scrollTo({ top: 0, behavior: "smooth" }); 
-          }
-         updatePage(currentPage);
 
-         // Items Per Page Handler
-         window.addEventListener("resize", debounce(() => {
-            const newItems = getItemsPerPage();
-            if (newItems !== itemsPerPage) {
-              itemsPerPage = newItems;
-              updatePage(1);
-            }
-          }, 150));
+          setTimeout(() => {
+            document.querySelectorAll(".card").forEach(card =>
+              card.classList.add("fade", "show")
+            );
+          }, 50);
         }
       } catch (error) {
         console.error("Error fetching recipe:", error);
+        toastmessage.textContent = "❌ Failed to load recipes.";
+        toast.show();
       } finally {
         if (spinner) spinner.classList.add("d-none");
         if (buttonText) buttonText.textContent = "Search";
         btn.disabled = false;
       }
     } else {
-      inputs[index].value = "";
-      toastmessage.textContent = "Please Enter the Recipe Name";
+      toastmessage.textContent = "Please enter a recipe name!";
       toast.show();
     }
   });
 });
 
 
-//Result Modal Close Button
-const closeBtnDesktop = document.getElementById("closeResultsDesktop");
-const resultsBoxDesktop = document.getElementById("resultsBoxDesktop");
-
-if (closeBtnDesktop && resultsBoxDesktop) {
-  closeBtnDesktop.addEventListener("click", () => {
-    resultsBoxDesktop.style.display = "none";
-  });
-}
-
-//Email Response System
+// EMAILJS CONTACT FORM
 emailjs.init("aplkpXHm-fnwl1UIP");
 
-document.getElementById("contactForm").addEventListener("submit", function(event) {
+document.getElementById("contactForm").addEventListener("submit", function (event) {
   event.preventDefault();
   const sendBtn = document.getElementById("sendBtn");
   const sendBtnText = document.getElementById("sendBtnText");
   const sendBtnIcon = document.getElementById("sendBtnIcon");
+
   sendBtn.classList.add("sending");
   sendBtn.disabled = true;
   sendBtnText.textContent = "Sending...";
   sendBtnIcon.classList.add("fly");
-  setTimeout(() => {
-    sendBtnIcon.classList.remove("fly");
-  }, 600);
+
+  setTimeout(() => sendBtnIcon.classList.remove("fly"), 600);
 
   const templateParams = {
     from_name: document.getElementById("name").value,
     from_email: document.getElementById("email").value,
     message: document.getElementById("message").value,
     date: new Date().toLocaleString()
-
   };
 
   emailjs.send("snackstack", "template_87i67lt", templateParams)
-
-  .then(() => {
-    toastmessage.textContent = "✅ Message sent successfully!";
-    toast.show();
-    sendBtnText.textContent = "Sent! ✅";
-
-    sendBtnIcon.classList.replace("bi-send-fill", "bi-check-circle-fill");
-    setTimeout(() => {
-      sendBtn.disabled = false;
-      sendBtn.classList.remove("sending");
-      sendBtnText.textContent = "Send Message";
-      sendBtnIcon.classList.replace("bi-check-circle-fill", "bi-send-fill");
-    }, 2000);
-    this.reset();
-
-  }, (error) => {
+    .then(() => {
+      toastmessage.textContent = "✅ Message sent successfully!";
+      toast.show();
+      sendBtnText.textContent = "Sent! ✅";
+      sendBtnIcon.classList.replace("bi-send-fill", "bi-check-circle-fill");
+      setTimeout(() => {
+        sendBtn.disabled = false;
+        sendBtn.classList.remove("sending");
+        sendBtnText.textContent = "Send Message";
+        sendBtnIcon.classList.replace("bi-check-circle-fill", "bi-send-fill");
+      }, 2000);
+      this.reset();
+    })
+    .catch(error => {
+      console.error("EmailJS Error:", error);
       toastmessage.textContent = "❌ Failed to send message. Please try again later.";
       toast.show();
-      console.error("EmailJS Error:", error);
       sendBtnText.textContent = "Failed!";
       sendBtnIcon.classList.replace("bi-send-fill", "bi-x-circle-fill");
       setTimeout(() => {
@@ -388,7 +416,21 @@ document.getElementById("contactForm").addEventListener("submit", function(event
         sendBtn.classList.remove("sending");
         sendBtnText.textContent = "Send Message";
         sendBtnIcon.classList.replace("bi-x-circle-fill", "bi-send-fill");
-        }, 2000);
+      }, 2000);
+    });
+});
+
+
+// DROPDOWN CATEGORY HANDLER
+
+document.addEventListener("DOMContentLoaded", () => {
+  const categoryLinks = document.querySelectorAll(".dropdown-menu .dropdown-item");
+  categoryLinks.forEach(link => {
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      const category = link.textContent.trim();
+      window.location.href = `recipe.html?category=${encodeURIComponent(category)}`;
+    });
   });
 });
 
@@ -457,17 +499,3 @@ document.getElementById("contactForm").addEventListener("submit", function(event
 //     }, 2000);
 //   }
 // });
-
-
-// Dropdown Categories handler
-document.addEventListener("DOMContentLoaded", () => {
-  const categoryLinks = document.querySelectorAll(".dropdown-menu .dropdown-item");
-
-  categoryLinks.forEach(link => {
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-      const category = link.textContent.trim();
-      window.location.href = `recipe.html?category=${encodeURIComponent(category)}`;
-    });
-  });
-});
